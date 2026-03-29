@@ -1,6 +1,7 @@
 #pragma once
 
 #include "component_registry.h"
+#include "entity_registry.h"
 #include <stdlib.h>
 
 struct storage {
@@ -25,4 +26,14 @@ static inline void storage_iterator_init(struct storage *storage,
     pools[i] = component_registry_get(storage->components, component_ids[i]);
   }
   iterator_init(iter, component_count, pools);
+}
+
+static inline size_t storage_create_entity(struct storage *storage) {
+  return entity_registry_next(storage->entities);
+}
+
+static inline void storage_delete_entity(struct storage *storage,
+                                         size_t entity) {
+  component_registry_remove_entity(storage->components, entity);
+  entity_registry_delete(storage->entities, entity);
 }

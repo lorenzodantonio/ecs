@@ -1,5 +1,4 @@
 #include "storage.h"
-#include "entity_registry.h"
 
 struct storage *storage_new(size_t max_entities) {
   struct storage *storage = malloc(sizeof(*storage));

@@ -56,27 +56,24 @@ int main(void) {
 
   size_t id0 = entity_registry_next(storage->entities);
   size_t id1 = entity_registry_next(storage->entities);
-  entity_registry_delete(storage->entities, id0);
-  entity_registry_delete(storage->entities, id1);
 
   struct component_pool *velocities =
       component_registry_get(storage->components, velocity_id);
 
-  size_t id2 = entity_registry_next(storage->entities);
-  size_t id3 = entity_registry_next(storage->entities);
-
-  Velocity *vel1 = component_pool_emplace(velocities, id2);
+  Velocity *vel1 = component_pool_emplace(velocities, id0);
   vel1->vx = 12.0f;
   vel1->vy = 23.0f;
 
-  Velocity *vel2 = component_pool_emplace(velocities, id3);
+  Velocity *vel2 = component_pool_emplace(velocities, id1);
   vel2->vx = 13.0f;
   vel2->vy = 24.0f;
 
+  size_t id2 = entity_registry_next(storage->entities);
+  size_t id3 = entity_registry_next(storage->entities);
   struct component_pool *positions =
       component_registry_get(storage->components, position_id);
 
-  Position *pos1 = component_pool_emplace(positions, id0);
+  Position *pos1 = component_pool_emplace(positions, id2);
   pos1->x = 3;
   pos1->y = 4;
 
@@ -84,19 +81,12 @@ int main(void) {
   pos2->x = 23;
   pos2->y = 43;
 
-  size_t id4 = entity_registry_next(storage->entities);
-  Position *p = component_pool_emplace(positions, id4);
-  p->x = 2;
-  p->y = 0;
-
-  Velocity *v = component_pool_emplace(velocities, id4);
-  v->vx = 2;
-  v->vy = 0;
-
   for (size_t i = 0; i < 10; i++) {
     update_position(storage, 0);
     update_position_and_velocity(storage, 0);
   }
+  component_registry_print(storage->components);
+  storage_delete_entity(storage, id2);
   component_registry_print(storage->components);
   fflush(stdout);
 
