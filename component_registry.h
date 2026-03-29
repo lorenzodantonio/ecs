@@ -12,6 +12,8 @@ struct component_pool {
   void *data;
 };
 
+int component_pool_remove(struct component_pool *pool, size_t entity);
+
 struct component_registry {
   size_t count;
   size_t capacity;
@@ -24,9 +26,10 @@ void component_registry_free(struct component_registry *registry);
 size_t component_registry_add(struct component_registry *registry, size_t size,
                               size_t capacity);
 
-void component_registry_print(struct component_registry *registry);
+int component_registry_remove_entity(struct component_registry *registry,
+                                     size_t entity);
 
-int component_pool_remove(struct component_pool *pool, size_t entity);
+void component_registry_print(struct component_registry *registry);
 
 static inline struct component_pool *
 component_registry_get(struct component_registry *registry,
@@ -53,7 +56,7 @@ static inline void *component_pool_emplace(struct component_pool *pool,
     return NULL;
   }
 
-  return component_pool_get_by_position(pool, pool->sparse_set.count++);
+  return component_pool_get_by_position(pool, pool->sparse_set.count - 1);
 }
 
 struct iterator {
