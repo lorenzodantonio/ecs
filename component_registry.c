@@ -30,7 +30,8 @@ size_t component_registry_add(struct component_registry *registry,
 void component_registry_print(struct component_registry *registry) {
   for (size_t i = 0; i < registry->count; i++) {
     struct component_pool pool = registry->pools[i];
-    printf("component_size:\t%zu\n", pool.component_size);
+    printf("component_size: %zu\tcount: %zu\n", pool.component_size,
+           pool.sparse_set.count);
     printf("sparse set\n");
     sparse_set_print(pool.sparse_set);
   }
@@ -65,7 +66,7 @@ int component_pool_remove(struct component_pool *pool, size_t entity) {
 
 int component_registry_remove_entity(struct component_registry *registry,
                                      size_t entity) {
-  for (size_t i = 0; registry->count; i++) {
+  for (size_t i = 0; i < registry->count; i++) {
     if (registry->pools[i].sparse_set.sparse[entity] != SIZE_MAX) {
       component_pool_remove(&registry->pools[i], entity);
     }
