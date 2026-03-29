@@ -36,19 +36,19 @@ int sparse_set_push(struct sparse_set *set, size_t entity) {
 }
 
 int sparse_set_remove(struct sparse_set *set, size_t entity) {
-  size_t dense_for_entity = set->sparse[entity];
-  if (dense_for_entity == SIZE_MAX) {
+  size_t position = set->sparse[entity];
+  if (position == SIZE_MAX) {
     return -1;
   }
 
   set->sparse[entity] = SIZE_MAX;
-  if (dense_for_entity == --set->count) {
+  if (position == --set->count) {
     return 0;
   }
 
-  size_t sparse_for_last = set->dense[set->count];
-  set->sparse[sparse_for_last] = dense_for_entity;
-  set->dense[dense_for_entity] = sparse_for_last;
+  size_t last_entity = set->dense[set->count];
+  set->sparse[last_entity] = position;
+  set->dense[position] = last_entity;
 
   return 0;
 }
