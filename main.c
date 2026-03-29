@@ -28,7 +28,7 @@ void update_position(struct storage *storage, float dt) {
   struct component_pool *pool =
       component_registry_get(storage->components, position_id);
 
-  for (size_t i = 0; i < pool->count; i++) {
+  for (size_t i = 0; i < pool->sparse_set.count; i++) {
     Position *pos = component_pool_get_by_position(pool, i);
     pos->x++;
     pos->y--;
