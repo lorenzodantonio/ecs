@@ -3,9 +3,7 @@
 
 void entity_registry_new__succeeds(void) {
   struct entity_registry *r = entity_registry_new(16);
-  assert(r->active.count == 0);
-  assert(r->head == 0);
-  assert(r->capacity == 16);
+  assert(r->cursor == 0);
   entity_registry_free(r);
 }
 

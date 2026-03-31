@@ -5,8 +5,7 @@
 #include <string.h>
 
 int entity_registry_exists(struct entity_registry *registry, size_t entity) {
-  return entity < registry->active.count &&
-         registry->active.sparse[entity] != SIZE_MAX;
+  return entity < registry->cursor && registry->items[entity] == entity;
 }
 
 struct entity_registry *entity_registry_new(size_t capacity) {
@@ -15,38 +14,41 @@ struct entity_registry *entity_registry_new(size_t capacity) {
     return NULL;
   }
 
-  list_init(&registry->reusable, capacity);
-  sparse_set_init(&registry->active, capacity);
-
+  registry->items = malloc(sizeof(size_t) * capacity);
+  for (size_t i = 0; i < capacity; i++) {
+    registry->items[i] = SIZE_MAX;
+  }
+  registry->head = SIZE_MAX;
+  registry->cursor = 0;
   registry->capacity = capacity;
-  registry->head = 0;
+
   return registry;
 }
 
 void entity_registry_free(struct entity_registry *registry) {
-  free(registry->active.dense);
-  free(registry->active.sparse);
+  free(registry->items);
   free(registry);
 }
 
 size_t entity_registry_next(struct entity_registry *registry) {
   size_t id;
-  if (registry->reusable.head != SIZE_MAX) {
-    id = list_pop(&registry->reusable);
+  if (registry->head != SIZE_MAX) {
+    id = registry->head;
+    registry->head = registry->items[id];
   } else {
-    id = registry->head++;
+    id = registry->cursor++;
   }
 
-  sparse_set_push(&registry->active, id);
+  registry->items[id] = id;
+
   return id;
 }
 
 int entity_registry_delete(struct entity_registry *registry, size_t entity) {
-  int removed = sparse_set_remove(&registry->active, entity);
-  if (removed == -1) {
+  if (!entity_registry_exists(registry, entity)) {
     return -1;
   }
-
-  list_push(&registry->reusable, entity);
+  registry->items[entity] = registry->head;
+  registry->head = entity;
   return 0;
 }

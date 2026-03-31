@@ -7,10 +7,11 @@
 #include <string.h>
 
 struct entity_registry {
-  struct list reusable;
-  struct sparse_set active;
   size_t head;
   size_t capacity;
+  size_t *items;
+
+  size_t cursor;
 };
 
 struct entity_registry *entity_registry_new(size_t capacity);
