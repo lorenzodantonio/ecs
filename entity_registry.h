@@ -7,10 +7,10 @@
 #include <string.h>
 
 struct entity_registry {
-  struct sparse_set freed;
+  struct list reusable;
+  struct sparse_set active;
   size_t head;
   size_t capacity;
-  size_t count;
 };
 
 struct entity_registry *entity_registry_new(size_t capacity);

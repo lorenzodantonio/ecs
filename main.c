@@ -87,6 +87,7 @@ int main(void) {
   }
   component_registry_print(storage->components);
   storage_delete_entity(storage, id2);
+
   component_registry_print(storage->components);
   fflush(stdout);
 

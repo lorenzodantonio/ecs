@@ -3,7 +3,7 @@
 
 void entity_registry_new__succeeds(void) {
   struct entity_registry *r = entity_registry_new(16);
-  assert(r->count == 0);
+  assert(r->active.count == 0);
   assert(r->head == 0);
   assert(r->capacity == 16);
   entity_registry_free(r);
@@ -30,17 +30,16 @@ void entity_registry_delete__fails_with_already_deleted_entity(void) {
 
 void entity_registry_delete__fails_if_entity_does_not_exist(void) {
   struct entity_registry *r = entity_registry_new(16);
-  entity_registry_next(r);
-  int res = entity_registry_delete(r, 100);
+  int res = entity_registry_delete(r, 10);
   assert(res == -1);
   entity_registry_free(r);
 }
 
 void entity_registry_delete__fails_if_entity_already_deleted(void) {
   struct entity_registry *r = entity_registry_new(16);
-  entity_registry_next(r);
-  assert(entity_registry_delete(r, 0) == 0);
-  assert(entity_registry_delete(r, 0) == -1);
+  size_t id = entity_registry_next(r);
+  assert(entity_registry_delete(r, id) == 0);
+  assert(entity_registry_delete(r, id) == -1);
   entity_registry_free(r);
 }
 
