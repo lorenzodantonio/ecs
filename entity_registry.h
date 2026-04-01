@@ -8,10 +8,9 @@
 
 struct entity_registry {
   size_t head;
+  size_t cursor;
   size_t capacity;
   size_t *items;
-
-  size_t cursor;
 };
 
 struct entity_registry *entity_registry_new(size_t capacity);

@@ -12,7 +12,7 @@ typedef struct {
 } Position;
 
 typedef struct {
-  float vx, vy;
+  int vx, vy;
 } Velocity;
 
 size_t position_id;
@@ -23,20 +23,22 @@ void initialize(struct storage *storage) {
   velocity_id = storage_register_component(storage, sizeof(Velocity));
 }
 
-void update_position(struct storage *storage, float dt) {
-  (void)dt;
+void reset_position(struct storage *storage) {
   struct component_pool *pool = storage_get_pool(storage, position_id);
 
   for (size_t i = 0; i < pool->sparse_set.count; i++) {
     Position *pos = component_pool_get_by_position(pool, i);
-    pos->x++;
-    pos->y--;
+
+    if (pos->x >= 600) {
+      pos->x = 0;
+    }
+    if (pos->y >= 600) {
+      pos->y = 0;
+    }
   }
 }
 
-void update_position_and_velocity(struct storage *storage, float dt) {
-  (void)dt;
-
+void move(struct storage *storage, float dt) {
   struct iterator iter;
   storage_iterator_init(storage, &iter, 2,
                         (size_t[]){position_id, velocity_id});
@@ -44,8 +46,9 @@ void update_position_and_velocity(struct storage *storage, float dt) {
   while (iterator_next(&iter)) {
     Position *pos = iter.data[position_id];
     Velocity *vel = iter.data[velocity_id];
-    pos->y += vel->vy;
-    vel->vy--;
+
+    pos->x += vel->vx * dt;
+    pos->y += vel->vy * dt;
   }
 }
 
@@ -59,34 +62,27 @@ int main(void) {
   struct component_pool *velocities = storage_get_pool(storage, velocity_id);
 
   Velocity *vel1 = component_pool_emplace(velocities, id0);
-  vel1->vx = 12.0f;
-  vel1->vy = 23.0f;
+  vel1->vx = 8;
+  vel1->vy = 8;
 
   Velocity *vel2 = component_pool_emplace(velocities, id1);
-  vel2->vx = 13.0f;
-  vel2->vy = 24.0f;
+  vel2->vx = 4;
+  vel2->vy = 4;
 
-  size_t id2 = storage_create_entity(storage);
-  size_t id3 = storage_create_entity(storage);
   struct component_pool *positions = storage_get_pool(storage, position_id);
 
-  Position *pos1 = component_pool_emplace(positions, id2);
-  pos1->x = 3;
-  pos1->y = 4;
+  Position *pos1 = component_pool_emplace(positions, id0);
+  pos1->x = 0;
+  pos1->y = 0;
 
-  Position *pos2 = component_pool_emplace(positions, id3);
-  pos2->x = 23;
-  pos2->y = 43;
+  Position *pos2 = component_pool_emplace(positions, id1);
+  pos2->x = 64;
+  pos2->y = 64;
 
-  for (size_t i = 0; i < 10; i++) {
-    update_position(storage, 0);
-    update_position_and_velocity(storage, 0);
+  for (size_t i = 0; i < 1000; i++) {
+    reset_position(storage);
+    move(storage, 1);
   }
-  component_registry_print(storage->components);
-  storage_delete_entity(storage, id2);
-
-  component_registry_print(storage->components);
-  fflush(stdout);
 
   storage_free(storage);
   return 0;
