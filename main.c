@@ -25,8 +25,7 @@ void initialize(struct storage *storage) {
 
 void update_position(struct storage *storage, float dt) {
   (void)dt;
-  struct component_pool *pool =
-      component_registry_get(storage->components, position_id);
+  struct component_pool *pool = storage_get_pool(storage, position_id);
 
   for (size_t i = 0; i < pool->sparse_set.count; i++) {
     Position *pos = component_pool_get_by_position(pool, i);
@@ -39,8 +38,8 @@ void update_position_and_velocity(struct storage *storage, float dt) {
   (void)dt;
 
   struct iterator iter;
-  size_t match[2] = {position_id, velocity_id};
-  storage_iterator_init(storage, &iter, 2, match);
+  storage_iterator_init(storage, &iter, 2,
+                        (size_t[]){position_id, velocity_id});
 
   while (iterator_next(&iter)) {
     Position *pos = iter.data[position_id];
@@ -54,11 +53,10 @@ int main(void) {
   struct storage *storage = storage_new(16);
   initialize(storage);
 
-  size_t id0 = entity_registry_next(storage->entities);
-  size_t id1 = entity_registry_next(storage->entities);
+  size_t id0 = storage_create_entity(storage);
+  size_t id1 = storage_create_entity(storage);
 
-  struct component_pool *velocities =
-      component_registry_get(storage->components, velocity_id);
+  struct component_pool *velocities = storage_get_pool(storage, velocity_id);
 
   Velocity *vel1 = component_pool_emplace(velocities, id0);
   vel1->vx = 12.0f;
@@ -68,10 +66,9 @@ int main(void) {
   vel2->vx = 13.0f;
   vel2->vy = 24.0f;
 
-  size_t id2 = entity_registry_next(storage->entities);
-  size_t id3 = entity_registry_next(storage->entities);
-  struct component_pool *positions =
-      component_registry_get(storage->components, position_id);
+  size_t id2 = storage_create_entity(storage);
+  size_t id3 = storage_create_entity(storage);
+  struct component_pool *positions = storage_get_pool(storage, position_id);
 
   Position *pos1 = component_pool_emplace(positions, id2);
   pos1->x = 3;

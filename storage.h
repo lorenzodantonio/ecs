@@ -17,6 +17,11 @@ static inline size_t storage_register_component(struct storage *storage,
   return component_registry_add(storage->components, size, 12);
 }
 
+static inline struct component_pool *storage_get_pool(struct storage *storage,
+                                                      size_t component_id) {
+  return component_registry_get(storage->components, component_id);
+}
+
 static inline void storage_iterator_init(struct storage *storage,
                                          struct iterator *iter,
                                          size_t component_count,
@@ -34,6 +39,6 @@ static inline size_t storage_create_entity(struct storage *storage) {
 
 static inline void storage_delete_entity(struct storage *storage,
                                          size_t entity) {
-  component_registry_remove_entity(storage->components, entity);
+  component_registry_purge_entity(storage->components, entity);
   entity_registry_delete(storage->entities, entity);
 }

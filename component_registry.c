@@ -64,8 +64,8 @@ int component_pool_remove(struct component_pool *pool, size_t entity) {
   return 0;
 }
 
-int component_registry_remove_entity(struct component_registry *registry,
-                                     size_t entity) {
+int component_registry_purge_entity(struct component_registry *registry,
+                                    size_t entity) {
   for (size_t i = 0; i < registry->count; i++) {
     if (registry->pools[i].sparse_set.sparse[entity] != SIZE_MAX) {
       component_pool_remove(&registry->pools[i], entity);

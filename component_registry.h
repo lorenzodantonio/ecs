@@ -26,8 +26,8 @@ void component_registry_free(struct component_registry *registry);
 size_t component_registry_add(struct component_registry *registry, size_t size,
                               size_t capacity);
 
-int component_registry_remove_entity(struct component_registry *registry,
-                                     size_t entity);
+int component_registry_purge_entity(struct component_registry *registry,
+                                    size_t entity);
 
 void component_registry_print(struct component_registry *registry);
 
