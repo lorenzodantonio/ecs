@@ -27,16 +27,6 @@ size_t component_registry_add(struct component_registry *registry,
   return id;
 }
 
-void component_registry_print(struct component_registry *registry) {
-  for (size_t i = 0; i < registry->count; i++) {
-    struct component_pool pool = registry->pools[i];
-    printf("component_size: %zu\tcount: %zu\n", pool.component_size,
-           pool.sparse_set.count);
-    printf("sparse set\n");
-    sparse_set_print(pool.sparse_set);
-  }
-}
-
 int component_pool_remove(struct component_pool *pool, size_t entity) {
   //
   size_t dense_idx = pool->sparse_set.sparse[entity];
