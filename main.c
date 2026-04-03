@@ -69,15 +69,15 @@ int main(void) {
   v1->vx = 4;
   v1->vy = 4;
 
-  // struct component_pool *positions = storage_get_pool(storage, position_id);
+  struct component_pool *positions = storage_get_pool(storage, position_id);
 
-  // Position *p0 = storage_component_emplace(positions, id0);
-  // p0->x = 0;
-  // p0->y = 0;
+  Position *p0 = storage_component_emplace(positions, id0);
+  p0->x = 0;
+  p0->y = 0;
 
-  // Position *p1 = storage_component_emplace(positions, id1);
-  // p1->x = 64;
-  // p1->y = 64;
+  Position *p1 = storage_component_emplace(positions, id1);
+  p1->x = 64;
+  p1->y = 64;
 
   for (size_t i = 0; i < 1000; i++) {
     reset_position(storage);
