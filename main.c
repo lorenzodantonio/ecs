@@ -61,23 +61,23 @@ int main(void) {
 
   struct component_pool *velocities = storage_get_pool(storage, velocity_id);
 
-  Velocity *vel1 = component_pool_emplace(velocities, id0);
-  vel1->vx = 8;
-  vel1->vy = 8;
+  Velocity *v0 = component_pool_emplace(velocities, id0);
+  v0->vx = 8;
+  v0->vy = 8;
 
-  Velocity *vel2 = component_pool_emplace(velocities, id1);
-  vel2->vx = 4;
-  vel2->vy = 4;
+  Velocity *v1 = component_pool_emplace(velocities, id1);
+  v1->vx = 4;
+  v1->vy = 4;
 
   struct component_pool *positions = storage_get_pool(storage, position_id);
 
-  Position *pos1 = component_pool_emplace(positions, id0);
-  pos1->x = 0;
-  pos1->y = 0;
+  Position *p0 = component_pool_emplace(positions, id0);
+  p0->x = 0;
+  p0->y = 0;
 
-  Position *pos2 = component_pool_emplace(positions, id1);
-  pos2->x = 64;
-  pos2->y = 64;
+  Position *p1 = component_pool_emplace(positions, id1);
+  p1->x = 64;
+  p1->y = 64;
 
   for (size_t i = 0; i < 1000; i++) {
     reset_position(storage);

@@ -29,8 +29,6 @@ size_t component_registry_add(struct component_registry *registry, size_t size,
 int component_registry_purge_entity(struct component_registry *registry,
                                     size_t entity);
 
-void component_registry_print(struct component_registry *registry);
-
 static inline struct component_pool *
 component_registry_get(struct component_registry *registry,
                        size_t component_id) {
