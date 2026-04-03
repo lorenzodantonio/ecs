@@ -56,28 +56,28 @@ int main(void) {
   struct storage *storage = storage_new(16);
   initialize(storage);
 
-  size_t id0 = storage_create_entity(storage);
-  size_t id1 = storage_create_entity(storage);
+  entity id0 = storage_create_entity(storage);
+  entity id1 = storage_create_entity(storage);
 
   struct component_pool *velocities = storage_get_pool(storage, velocity_id);
 
-  Velocity *v0 = component_pool_emplace(velocities, id0);
+  Velocity *v0 = storage_component_emplace(velocities, id0);
   v0->vx = 8;
   v0->vy = 8;
 
-  Velocity *v1 = component_pool_emplace(velocities, id1);
+  Velocity *v1 = storage_component_emplace(velocities, id1);
   v1->vx = 4;
   v1->vy = 4;
 
-  struct component_pool *positions = storage_get_pool(storage, position_id);
+  // struct component_pool *positions = storage_get_pool(storage, position_id);
 
-  Position *p0 = component_pool_emplace(positions, id0);
-  p0->x = 0;
-  p0->y = 0;
+  // Position *p0 = storage_component_emplace(positions, id0);
+  // p0->x = 0;
+  // p0->y = 0;
 
-  Position *p1 = component_pool_emplace(positions, id1);
-  p1->x = 64;
-  p1->y = 64;
+  // Position *p1 = storage_component_emplace(positions, id1);
+  // p1->x = 64;
+  // p1->y = 64;
 
   for (size_t i = 0; i < 1000; i++) {
     reset_position(storage);

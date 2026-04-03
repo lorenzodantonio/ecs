@@ -37,6 +37,11 @@ static inline size_t storage_create_entity(struct storage *storage) {
   return entity_registry_next(storage->entities);
 }
 
+static inline void *storage_component_emplace(struct component_pool *pool,
+                                              entity e) {
+  return component_pool_emplace(pool, entity_get_index(e));
+}
+
 static inline void storage_delete_entity(struct storage *storage,
                                          size_t entity) {
   component_registry_purge_entity(storage->components, entity);

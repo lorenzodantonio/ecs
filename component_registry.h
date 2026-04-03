@@ -1,6 +1,7 @@
 #pragma once
 
 #include "datastructure.h"
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -47,8 +48,8 @@ static inline void *component_pool_get_by_entity(struct component_pool *pool,
 }
 
 static inline void *component_pool_emplace(struct component_pool *pool,
-                                           size_t entity) {
-  int res = sparse_set_push(&pool->sparse_set, entity);
+                                           uint32_t index) {
+  int res = sparse_set_push(&pool->sparse_set, index);
   if (res == -1) {
     fprintf(stderr, "error mapping entity to sparse set\n");
     return NULL;
