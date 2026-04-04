@@ -11,7 +11,7 @@ struct storage *storage_new(size_t max_entities) {
     return NULL;
   }
 
-  storage->components = component_registry_new(32);
+  storage->components = component_registry_new();
   if (!storage->components) {
     return NULL;
   }

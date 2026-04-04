@@ -1,14 +1,14 @@
 #include "component_registry.h"
+#include <assert.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
 
-struct component_registry *component_registry_new(size_t capacity) {
-  struct component_registry *registry =
-      malloc(sizeof(*registry) + (sizeof(*(registry->pools)) * capacity));
+struct component_registry *component_registry_new() {
+  struct component_registry *registry = malloc(sizeof(*registry));
 
   registry->count = 0;
-  registry->capacity = capacity;
+  // registry->capacity = capacity;
   return registry;
 }
 
@@ -18,6 +18,8 @@ void component_registry_free(struct component_registry *registry) {
 
 size_t component_registry_add(struct component_registry *registry,
                               size_t component_size, size_t capacity) {
+  assert(registry->count < MAX_COMPONENTS);
+
   size_t id = registry->count++;
   struct component_pool *pool = &registry->pools[id];
   pool->id = id;

@@ -5,6 +5,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define MAX_COMPONENTS 128
+
 struct component_pool {
   size_t id;
   size_t capacity;
@@ -17,11 +19,11 @@ int component_pool_remove(struct component_pool *pool, size_t entity);
 
 struct component_registry {
   size_t count;
-  size_t capacity;
-  struct component_pool pools[];
+  // size_t capacity;
+  struct component_pool pools[MAX_COMPONENTS];
 };
 
-struct component_registry *component_registry_new(size_t capacity);
+struct component_registry *component_registry_new();
 void component_registry_free(struct component_registry *registry);
 
 size_t component_registry_add(struct component_registry *registry, size_t size,
@@ -64,7 +66,7 @@ struct iterator {
   size_t component_count;
   struct component_pool *leader;
   struct component_pool *followers[63];
-  void *data[64];
+  void *data[MAX_COMPONENTS];
 };
 
 void iterator_init(struct iterator *iter, size_t component_count,

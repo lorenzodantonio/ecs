@@ -1,21 +1,16 @@
 #include "test_component_registry.h"
-#include "assert.h"
 #include "component_registry.h"
+#include <assert.h>
 #include <stdint.h>
 
 void component_registry_new__succeeds(void) {
-  size_t capacity = 8;
-  (void)capacity;
-  struct component_registry *registry = component_registry_new(capacity);
-
+  struct component_registry *registry = component_registry_new();
   assert(registry->count == 0);
-  assert(registry->capacity == capacity);
-
   component_registry_free(registry);
 }
 
 void component_registry_add__succeeds(void) {
-  struct component_registry *registry = component_registry_new(8);
+  struct component_registry *registry = component_registry_new();
   size_t component_size = sizeof(struct x { int y; });
   size_t max_entities = 16;
   int component_id =
