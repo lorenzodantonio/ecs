@@ -65,7 +65,7 @@ struct iterator {
   size_t entity;
   size_t component_count;
   struct component_pool *leader;
-  struct component_pool *followers[63];
+  struct component_pool *followers[MAX_COMPONENTS - 1];
   void *data[MAX_COMPONENTS];
 };
 
