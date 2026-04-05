@@ -2,13 +2,13 @@
 #include <assert.h>
 
 void entity_registry_new__succeeds(void) {
-  struct entity_registry *r = entity_registry_new(16);
+  struct entity_registry *r = entity_registry_new();
   assert(r->cursor == 0);
   entity_registry_free(r);
 }
 
 void entity_registry_delete__succeeds(void) {
-  struct entity_registry *r = entity_registry_new(16);
+  struct entity_registry *r = entity_registry_new();
   size_t e = entity_registry_next(r);
   entity_registry_delete(r, e);
   assert(entity_registry_exists(r, e) == 0);
@@ -16,7 +16,7 @@ void entity_registry_delete__succeeds(void) {
 }
 
 void entity_registry_delete__fails_with_already_deleted_entity(void) {
-  struct entity_registry *r = entity_registry_new(16);
+  struct entity_registry *r = entity_registry_new();
   size_t e = entity_registry_next(r);
   entity_registry_delete(r, e);
   assert(entity_registry_exists(r, e) == 0);
@@ -27,7 +27,7 @@ void entity_registry_delete__fails_with_already_deleted_entity(void) {
 }
 
 void entity_registry_delete__fails_if_entity_does_not_exist(void) {
-  struct entity_registry *r = entity_registry_new(16);
+  struct entity_registry *r = entity_registry_new();
   entity e = entity_new(10, 0);
   int res = entity_registry_delete(r, e);
   assert(res == -1);
@@ -35,7 +35,7 @@ void entity_registry_delete__fails_if_entity_does_not_exist(void) {
 }
 
 void entity_registry_delete__fails_if_entity_already_deleted(void) {
-  struct entity_registry *r = entity_registry_new(16);
+  struct entity_registry *r = entity_registry_new();
   entity e = entity_registry_next(r);
   assert(entity_registry_delete(r, e) == 0);
   assert(entity_registry_delete(r, e) == -1);
@@ -43,14 +43,14 @@ void entity_registry_delete__fails_if_entity_already_deleted(void) {
 }
 
 void entity_registry_next__succeeds(void) {
-  struct entity_registry *r = entity_registry_new(16);
+  struct entity_registry *r = entity_registry_new();
   size_t id = entity_registry_next(r);
   assert(id == 0);
   entity_registry_free(r);
 }
 
 void entity_registry_next__reuse_last_index_deleted(void) {
-  struct entity_registry *r = entity_registry_new(16);
+  struct entity_registry *r = entity_registry_new();
   entity old = entity_registry_next(r);
   entity expected = entity_new(entity_get_index(old), 1);
   entity_registry_delete(r, old);
@@ -61,14 +61,14 @@ void entity_registry_next__reuse_last_index_deleted(void) {
 }
 
 void entity_registry_exists__succeeds(void) {
-  struct entity_registry *r = entity_registry_new(16);
+  struct entity_registry *r = entity_registry_new();
   size_t id = entity_registry_next(r);
   assert(entity_registry_exists(r, id) == 1);
   entity_registry_free(r);
 }
 
 void entity_registry_exists__fails(void) {
-  struct entity_registry *r = entity_registry_new(16);
+  struct entity_registry *r = entity_registry_new();
   assert(entity_registry_exists(r, 100) == 0);
   entity_registry_free(r);
 }

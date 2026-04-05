@@ -1,12 +1,12 @@
 #include "storage.h"
 
-struct storage *storage_new(size_t max_entities) {
+struct storage *storage_new(void) {
   struct storage *storage = malloc(sizeof(*storage));
   if (!storage) {
     return NULL;
   }
 
-  storage->entities = entity_registry_new(max_entities);
+  storage->entities = entity_registry_new();
   if (!storage->entities) {
     return NULL;
   }

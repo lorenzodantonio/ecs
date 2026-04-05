@@ -9,12 +9,12 @@ struct storage {
   struct component_registry *components;
 };
 
-struct storage *storage_new(size_t max_entities);
+struct storage *storage_new(void);
 void storage_free(struct storage *s);
 
 static inline size_t storage_register_component(struct storage *storage,
                                                 size_t size) {
-  return component_registry_add(storage->components, size, 12);
+  return component_registry_add(storage->components, size, INVALID_ENTITY_IDX);
 }
 
 static inline struct component_pool *storage_get_pool(struct storage *storage,

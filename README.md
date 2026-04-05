@@ -6,7 +6,7 @@
 Data storage based on ECS
 
 ## Entity
-An entity is a unique identifier composed of an index and a version, both uint32_t.
+An entity is a unique identifier composed of an index in the least significant bits and a version in the remaining 12.
 When an entity is deleted its index is listed for reuse, but upon recycling the version will be increased.
 
 ```c
@@ -16,6 +16,8 @@ storage_delete_entity(storage,  foo);
 storage_create_entity(storage); // index: 0 version: 1
 storage_create_entity(storage); // index: 2 version: 0
 ```
+
+The maximum number of active entities is 1.048.575 (2^20 - 1), each index can be recycled up to 4,096 times;
 
 ## Component
 Any C data type can be a component, registering it assigns a progressive id.
@@ -28,7 +30,7 @@ typedef struct {
 size_t position_id;
 
 int main(void) {
-    struct storage *storage = storage_new(1024);
+    struct storage *storage = storage_new();
     position_id = storage_register_component(storage, sizeof(Position));
     return 0;
 }

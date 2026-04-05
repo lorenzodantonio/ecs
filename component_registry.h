@@ -19,15 +19,14 @@ int component_pool_remove(struct component_pool *pool, size_t entity);
 
 struct component_registry {
   size_t count;
-  // size_t capacity;
   struct component_pool pools[MAX_COMPONENTS];
 };
 
 struct component_registry *component_registry_new();
 void component_registry_free(struct component_registry *registry);
 
-size_t component_registry_add(struct component_registry *registry, size_t size,
-                              size_t capacity);
+size_t component_registry_add(struct component_registry *registry,
+                              size_t component_size, size_t capacity);
 
 int component_registry_purge_entity(struct component_registry *registry,
                                     size_t entity);

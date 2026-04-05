@@ -9,25 +9,25 @@ int entity_registry_exists(struct entity_registry *registry, entity e) {
   return idx < registry->cursor && registry->items[idx] == e;
 }
 
-struct entity_registry *entity_registry_new(size_t capacity) {
+struct entity_registry *entity_registry_new(void) {
   struct entity_registry *registry = malloc(sizeof(*registry));
   if (!registry) {
     return NULL;
   }
 
-  registry->items = malloc(sizeof(entity) * capacity);
-  for (size_t i = 0; i < capacity; i++) {
-    registry->items[i] = EMPTY_ENTITY;
+  // registry->items = malloc(sizeof(entity) * capacity);
+  for (size_t i = 0; i < INVALID_ENTITY_IDX; i++) {
+    registry->items[i] = INVALID_ENTITY;
   }
-  registry->head = EMPTY_ENTITY;
+  registry->head = INVALID_ENTITY;
   registry->cursor = 0;
-  registry->capacity = capacity;
+  registry->capacity = INVALID_ENTITY_IDX;
 
   return registry;
 }
 
 void entity_registry_free(struct entity_registry *registry) {
-  free(registry->items);
+  // free(registry->items);
   free(registry);
 }
 
@@ -35,7 +35,7 @@ entity entity_registry_next(struct entity_registry *registry) {
   entity e;
   uint32_t idx;
 
-  if (registry->head != EMPTY_ENTITY) {
+  if (registry->head != INVALID_ENTITY) {
     idx = entity_get_index(registry->head);
     e = entity_new(idx, entity_get_version(registry->head) + 1);
     registry->head = registry->items[idx];

@@ -53,7 +53,7 @@ void move(struct storage *storage, float dt) {
 }
 
 int main(void) {
-  struct storage *storage = storage_new(16);
+  struct storage *storage = storage_new();
   initialize(storage);
 
   entity id0 = storage_create_entity(storage);

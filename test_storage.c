@@ -3,7 +3,7 @@
 #include <assert.h>
 
 void storage_new__succeeds(void) {
-  struct storage *s = storage_new(16);
+  struct storage *s = storage_new();
   assert(s->entities != NULL);
   assert(s->components != NULL);
   storage_free(s);
