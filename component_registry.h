@@ -39,10 +39,10 @@ component_registry_get(struct component_registry *registry,
 
 static inline void *component_pool_get_by_position(struct component_pool *pool,
                                                    size_t position) {
-  return pool->data + position * pool->component_size;
+  return (char *)pool->data + position * pool->component_size;
 }
 
-static inline void *component_pool_get_by_entity(struct component_pool *pool,
+static inline char *component_pool_get_by_entity(struct component_pool *pool,
                                                  size_t entity) {
   size_t pos = pool->sparse_set.sparse[entity];
   return component_pool_get_by_position(pool, pos);
