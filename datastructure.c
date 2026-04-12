@@ -5,11 +5,11 @@
 #include <string.h>
 
 int sparse_set_init(struct sparse_set *set, size_t capacity) {
-  set->sparse = malloc(sizeof(size_t) * capacity);
+  set->sparse = malloc(sizeof(uint32_t) * capacity);
   set->dense = malloc(sizeof(entity) * capacity);
 
   for (size_t i = 0; i < capacity; i++) {
-    set->sparse[i] = SIZE_MAX;
+    set->sparse[i] = UINT32_MAX;
   }
 
   set->count = 0;
@@ -25,8 +25,8 @@ struct sparse_set *sparse_set_new(size_t capacity) {
 }
 
 int sparse_set_push(struct sparse_set *set, entity e) {
-  size_t idx = entity_get_index(e);
-  if (set->sparse[idx] != SIZE_MAX) {
+  uint32_t idx = entity_get_index(e);
+  if (set->sparse[idx] != UINT32_MAX) {
     return -1;
   }
 
@@ -37,13 +37,13 @@ int sparse_set_push(struct sparse_set *set, entity e) {
 }
 
 int sparse_set_remove(struct sparse_set *set, entity e) {
-  size_t idx = entity_get_index(e);
-  size_t position = set->sparse[idx];
-  if (position == SIZE_MAX) {
+  uint32_t idx = entity_get_index(e);
+  uint32_t position = set->sparse[idx];
+  if (position == UINT32_MAX) {
     return -1;
   }
 
-  set->sparse[idx] = SIZE_MAX;
+  set->sparse[idx] = UINT32_MAX;
   if (position == --set->count) {
     return 0;
   }

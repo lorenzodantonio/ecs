@@ -31,14 +31,14 @@ size_t component_registry_add(struct component_registry *registry,
 
 int component_pool_remove(struct component_pool *pool, entity e) {
   //
-  size_t e_idx = entity_get_index(e);
-  size_t dense_idx = pool->entities.sparse[e_idx];
-  if (dense_idx == SIZE_MAX) {
+  uint32_t e_idx = entity_get_index(e);
+  uint32_t dense_idx = pool->entities.sparse[e_idx];
+  if (dense_idx == UINT32_MAX) {
     // does not exist; fails
     return -1;
   }
 
-  pool->entities.sparse[e_idx] = SIZE_MAX;
+  pool->entities.sparse[e_idx] = UINT32_MAX;
   if (dense_idx == --pool->entities.count) {
     // last element, do not swap;
     // just decrease count, value clean up is not required
@@ -60,7 +60,7 @@ int component_pool_remove(struct component_pool *pool, entity e) {
 int component_registry_purge_entity(struct component_registry *registry,
                                     entity e) {
   for (size_t i = 0; i < registry->count; i++) {
-    if (registry->pools[i].entities.sparse[entity_get_index(e)] != SIZE_MAX) {
+    if (registry->pools[i].entities.sparse[entity_get_index(e)] != UINT32_MAX) {
       component_pool_remove(&registry->pools[i], e);
     }
   }
@@ -100,7 +100,7 @@ int iterator_next(struct iterator *iter) {
     while (inner_match && j < iter->component_count - 1) {
       struct component_pool *f = iter->followers[j++];
       inner_match =
-          inner_match && f->entities.sparse[entity_get_index(e)] != SIZE_MAX;
+          inner_match && f->entities.sparse[entity_get_index(e)] != UINT32_MAX;
     }
     match = inner_match;
     cursor = iter->cursor++;

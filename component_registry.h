@@ -39,13 +39,13 @@ component_registry_get(struct component_registry *registry,
 }
 
 static inline void *component_pool_get_by_position(struct component_pool *pool,
-                                                   size_t position) {
+                                                   uint32_t position) {
   return (char *)pool->data + position * pool->component_size;
 }
 
 static inline char *component_pool_get_by_entity(struct component_pool *pool,
                                                  entity e) {
-  size_t pos = pool->entities.sparse[entity_get_index(e)];
+  uint32_t pos = pool->entities.sparse[entity_get_index(e)];
   return component_pool_get_by_position(pool, pos);
 }
 

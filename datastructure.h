@@ -5,7 +5,7 @@
 #include <stdlib.h>
 
 struct sparse_set {
-  size_t *sparse;
+  uint32_t *sparse;
   entity *dense;
   size_t count;
   size_t capacity;
