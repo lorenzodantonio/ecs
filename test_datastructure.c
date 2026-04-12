@@ -17,18 +17,18 @@ void sparse_set_new__succeeds(void) {
 
 void sparse_set_push__succeds(void) {
   struct sparse_set *s = sparse_set_new(8);
-  size_t e = 2;
+  entity e = entity_new(1, 4);
   int r = sparse_set_push(s, e);
   assert(r == 0);
   assert(s->count == 1);
-  size_t dense_pos = s->sparse[e];
+  size_t dense_pos = s->sparse[entity_get_index(e)];
   assert(dense_pos == s->count - 1);
   sparse_set_free(s);
 }
 
 void sparse_set_push__fails_if_element_already_exists(void) {
   struct sparse_set *s = sparse_set_new(8);
-  size_t e = 2;
+  entity e = entity_new(1, 4);
   sparse_set_push(s, e);
   int r = sparse_set_push(s, e);
   assert(r == -1);
@@ -39,40 +39,41 @@ void sparse_set_push__fails_if_element_already_exists(void) {
 
 void sparse_set_remove__succeeds_with_last_element(void) {
   struct sparse_set *s = sparse_set_new(8);
-  size_t e = 2;
+  entity e = entity_new(1, 4);
   sparse_set_push(s, e);
 
   int r = sparse_set_remove(s, e);
   assert(r == 0);
   assert(s->count == 0);
-  assert(s->sparse[e] == SIZE_MAX);
+  assert(s->sparse[entity_get_index(e)] == SIZE_MAX);
 
   sparse_set_free(s);
 }
 
 void sparse_set_remove__swaps_last_dense_array_element(void) {
   struct sparse_set *s = sparse_set_new(8);
-  size_t e = 2;
+  entity e = entity_new(1, 4);
+  size_t e_idx = entity_get_index(e);
   sparse_set_push(s, e);
-  sparse_set_push(s, 3);
+  sparse_set_push(s, entity_new(3, 3));
 
-  size_t last_entity = s->dense[s->count - 1];
-  size_t to_delete_dense_pos = s->sparse[e];
+  entity last_entity = s->dense[s->count - 1];
+  size_t to_delete_dense_pos = s->sparse[e_idx];
 
   int r = sparse_set_remove(s, e);
   assert(r == 0);
   assert(s->dense[to_delete_dense_pos] == last_entity);
-  assert(s->sparse[e] == SIZE_MAX);
+  assert(s->sparse[e_idx] == SIZE_MAX);
 
   sparse_set_free(s);
 }
 
 void sparse_set_remove__fails_if_element_does_not_exist(void) {
   struct sparse_set *s = sparse_set_new(8);
-  size_t e = 3;
-  int r = sparse_set_remove(s, 3);
+  entity e = entity_new(1, 4);
+  int r = sparse_set_remove(s, e);
   assert(r == -1);
-  assert(s->sparse[e] == SIZE_MAX);
+  assert(s->sparse[entity_get_index(e)] == SIZE_MAX);
   assert(s->count == 0);
 
   sparse_set_free(s);

@@ -33,17 +33,12 @@ static inline void storage_iterator_init(struct storage *storage,
   iterator_init(iter, component_count, pools);
 }
 
-static inline size_t storage_create_entity(struct storage *storage) {
+static inline entity storage_create_entity(struct storage *storage) {
   return entity_registry_next(storage->entities);
 }
 
-static inline void *storage_emplace_component(struct component_pool *pool,
-                                              entity e) {
-  return component_pool_emplace(pool, entity_get_index(e));
-}
-
 static inline void storage_delete_entity(struct storage *storage,
-                                         size_t entity) {
+                                         entity entity) {
   component_registry_purge_entity(storage->components, entity);
   entity_registry_delete(storage->entities, entity);
 }

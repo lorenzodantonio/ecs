@@ -29,15 +29,16 @@ size_t component_registry_add(struct component_registry *registry,
   return id;
 }
 
-int component_pool_remove(struct component_pool *pool, size_t entity) {
+int component_pool_remove(struct component_pool *pool, entity e) {
   //
-  size_t dense_idx = pool->sparse_set.sparse[entity];
+  size_t e_idx = entity_get_index(e);
+  size_t dense_idx = pool->sparse_set.sparse[e_idx];
   if (dense_idx == SIZE_MAX) {
     // does not exist; fails
     return -1;
   }
 
-  pool->sparse_set.sparse[entity] = SIZE_MAX;
+  pool->sparse_set.sparse[e_idx] = SIZE_MAX;
   if (dense_idx == --pool->sparse_set.count) {
     // last element, do not swap;
     // just decrease count, value clean up is not required
@@ -48,19 +49,19 @@ int component_pool_remove(struct component_pool *pool, size_t entity) {
   memcpy(component_pool_get_by_position(pool, dense_idx),
          component_pool_get_by_position(pool, count), pool->component_size);
 
-  size_t last_entity = pool->sparse_set.dense[count];
+  entity last_entity = pool->sparse_set.dense[count];
 
-  pool->sparse_set.sparse[last_entity] = dense_idx;
+  pool->sparse_set.sparse[entity_get_index(last_entity)] = dense_idx;
   pool->sparse_set.dense[dense_idx] = last_entity;
 
   return 0;
 }
 
 int component_registry_purge_entity(struct component_registry *registry,
-                                    size_t entity) {
+                                    entity e) {
   for (size_t i = 0; i < registry->count; i++) {
-    if (registry->pools[i].sparse_set.sparse[entity] != SIZE_MAX) {
-      component_pool_remove(&registry->pools[i], entity);
+    if (registry->pools[i].sparse_set.sparse[entity_get_index(e)] != SIZE_MAX) {
+      component_pool_remove(&registry->pools[i], e);
     }
   }
 
@@ -81,24 +82,25 @@ void iterator_init(struct iterator *iter, size_t component_count,
     }
   }
   iter->leader = leader;
-  iter->entity = SIZE_MAX;
+  iter->entity = INVALID_ENTITY;
   iter->cursor = 0;
   iter->component_count = component_count;
 }
 
 int iterator_next(struct iterator *iter) {
   size_t cursor;
-  size_t entity = SIZE_MAX;
+  entity e = INVALID_ENTITY;
 
   int match = 0;
   while (!match && iter->cursor < iter->leader->sparse_set.count) {
-    entity = iter->leader->sparse_set.dense[iter->cursor];
+    e = iter->leader->sparse_set.dense[iter->cursor];
 
     int inner_match = 1;
     size_t j = 0;
     while (inner_match && j < iter->component_count - 1) {
       struct component_pool *f = iter->followers[j++];
-      inner_match = inner_match && f->sparse_set.sparse[entity] != SIZE_MAX;
+      inner_match =
+          inner_match && f->sparse_set.sparse[entity_get_index(e)] != SIZE_MAX;
     }
     match = inner_match;
     cursor = iter->cursor++;
@@ -108,13 +110,13 @@ int iterator_next(struct iterator *iter) {
     return 0;
   }
 
-  iter->entity = entity;
+  iter->entity = e;
 
   iter->data[iter->leader->id] =
       component_pool_get_by_position(iter->leader, cursor);
   for (size_t k = 0; k < iter->component_count - 1; k++) {
     iter->data[iter->followers[k]->id] =
-        component_pool_get_by_entity(iter->followers[k], entity);
+        component_pool_get_by_entity(iter->followers[k], e);
   }
 
   return match;

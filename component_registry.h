@@ -1,6 +1,7 @@
 #pragma once
 
 #include "datastructure.h"
+#include "entity.h"
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -15,7 +16,7 @@ struct component_pool {
   void *data;
 };
 
-int component_pool_remove(struct component_pool *pool, size_t entity);
+int component_pool_remove(struct component_pool *pool, entity entity);
 
 struct component_registry {
   size_t count;
@@ -29,7 +30,7 @@ size_t component_registry_add(struct component_registry *registry,
                               size_t component_size, size_t capacity);
 
 int component_registry_purge_entity(struct component_registry *registry,
-                                    size_t entity);
+                                    entity e);
 
 static inline struct component_pool *
 component_registry_get(struct component_registry *registry,
@@ -43,14 +44,14 @@ static inline void *component_pool_get_by_position(struct component_pool *pool,
 }
 
 static inline char *component_pool_get_by_entity(struct component_pool *pool,
-                                                 size_t entity) {
-  size_t pos = pool->sparse_set.sparse[entity];
+                                                 entity e) {
+  size_t pos = pool->sparse_set.sparse[entity_get_index(e)];
   return component_pool_get_by_position(pool, pos);
 }
 
 static inline void *component_pool_emplace(struct component_pool *pool,
-                                           uint32_t index) {
-  int res = sparse_set_push(&pool->sparse_set, index);
+                                           entity e) {
+  int res = sparse_set_push(&pool->sparse_set, e);
   if (res == -1) {
     fprintf(stderr, "error mapping entity to sparse set\n");
     return NULL;
@@ -61,7 +62,7 @@ static inline void *component_pool_emplace(struct component_pool *pool,
 
 struct iterator {
   size_t cursor;
-  size_t entity;
+  entity entity;
   size_t component_count;
   struct component_pool *leader;
   struct component_pool *followers[MAX_COMPONENTS - 1];
