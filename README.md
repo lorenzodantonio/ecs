@@ -45,7 +45,7 @@ Component pools can be stored in global/local variables or retrieved using the i
 ```c
 ...
 struct component_pool *positions = storage_get_pool(storage, position_id);
-for (size_t i = 0; i < positions->sparse_set.count; i++) {
+for (size_t i = 0; i < positions->entities.count; i++) {
     // do stuff
 }
 ...

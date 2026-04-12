@@ -25,34 +25,34 @@ size_t component_registry_add(struct component_registry *registry,
   pool->id = id;
   pool->component_size = component_size;
   pool->data = malloc(component_size * capacity);
-  sparse_set_init(&pool->sparse_set, capacity);
+  sparse_set_init(&pool->entities, capacity);
   return id;
 }
 
 int component_pool_remove(struct component_pool *pool, entity e) {
   //
   size_t e_idx = entity_get_index(e);
-  size_t dense_idx = pool->sparse_set.sparse[e_idx];
+  size_t dense_idx = pool->entities.sparse[e_idx];
   if (dense_idx == SIZE_MAX) {
     // does not exist; fails
     return -1;
   }
 
-  pool->sparse_set.sparse[e_idx] = SIZE_MAX;
-  if (dense_idx == --pool->sparse_set.count) {
+  pool->entities.sparse[e_idx] = SIZE_MAX;
+  if (dense_idx == --pool->entities.count) {
     // last element, do not swap;
     // just decrease count, value clean up is not required
     return 0;
   }
 
-  size_t count = pool->sparse_set.count;
+  size_t count = pool->entities.count;
   memcpy(component_pool_get_by_position(pool, dense_idx),
          component_pool_get_by_position(pool, count), pool->component_size);
 
-  entity last_entity = pool->sparse_set.dense[count];
+  entity last_entity = pool->entities.dense[count];
 
-  pool->sparse_set.sparse[entity_get_index(last_entity)] = dense_idx;
-  pool->sparse_set.dense[dense_idx] = last_entity;
+  pool->entities.sparse[entity_get_index(last_entity)] = dense_idx;
+  pool->entities.dense[dense_idx] = last_entity;
 
   return 0;
 }
@@ -60,7 +60,7 @@ int component_pool_remove(struct component_pool *pool, entity e) {
 int component_registry_purge_entity(struct component_registry *registry,
                                     entity e) {
   for (size_t i = 0; i < registry->count; i++) {
-    if (registry->pools[i].sparse_set.sparse[entity_get_index(e)] != SIZE_MAX) {
+    if (registry->pools[i].entities.sparse[entity_get_index(e)] != SIZE_MAX) {
       component_pool_remove(&registry->pools[i], e);
     }
   }
@@ -74,7 +74,7 @@ void iterator_init(struct iterator *iter, size_t component_count,
   struct component_pool *leader = pools[i];
 
   for (i++; i < component_count; i++) {
-    if (pools[i]->sparse_set.count < leader->sparse_set.count) {
+    if (pools[i]->entities.count < leader->entities.count) {
       iter->followers[i - 1] = leader;
       leader = pools[i];
     } else {
@@ -92,15 +92,15 @@ int iterator_next(struct iterator *iter) {
   entity e = INVALID_ENTITY;
 
   int match = 0;
-  while (!match && iter->cursor < iter->leader->sparse_set.count) {
-    e = iter->leader->sparse_set.dense[iter->cursor];
+  while (!match && iter->cursor < iter->leader->entities.count) {
+    e = iter->leader->entities.dense[iter->cursor];
 
     int inner_match = 1;
     size_t j = 0;
     while (inner_match && j < iter->component_count - 1) {
       struct component_pool *f = iter->followers[j++];
       inner_match =
-          inner_match && f->sparse_set.sparse[entity_get_index(e)] != SIZE_MAX;
+          inner_match && f->entities.sparse[entity_get_index(e)] != SIZE_MAX;
     }
     match = inner_match;
     cursor = iter->cursor++;

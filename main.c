@@ -26,7 +26,7 @@ void initialize(struct storage *storage) {
 void reset_position(struct storage *storage) {
   struct component_pool *pool = storage_get_pool(storage, position_id);
 
-  for (size_t i = 0; i < pool->sparse_set.count; i++) {
+  for (size_t i = 0; i < pool->entities.count; i++) {
     Position *pos = component_pool_get_by_position(pool, i);
 
     if (pos->x >= 600) {
