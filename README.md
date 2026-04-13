@@ -57,7 +57,7 @@ An iterator can be instantiated in order to scan multiple component pools lookin
 ...
 void move(struct storage *storage, float dt) {
   struct iterator iter;
-  storage_iterator_init(storage, &iter, 2,
+  storage_init_iterator(storage, &iter, 2,
                         (size_t[]){position_id, velocity_id});
 
   while (iterator_next(&iter)) {

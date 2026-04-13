@@ -3,8 +3,6 @@
 #include "datastructure.h"
 #include "entity.h"
 #include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
 
 #define MAX_COMPONENTS 128
 
@@ -23,8 +21,7 @@ struct component_registry {
   struct component_pool pools[MAX_COMPONENTS];
 };
 
-struct component_registry *component_registry_new();
-void component_registry_free(struct component_registry *registry);
+void component_registry_init(struct component_registry *registry);
 
 size_t component_registry_add(struct component_registry *registry,
                               size_t component_size, size_t capacity);

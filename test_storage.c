@@ -4,7 +4,6 @@
 
 void storage_new__succeeds(void) {
   struct storage *s = storage_new();
-  assert(s->entities != NULL);
-  assert(s->components != NULL);
+  assert(s != NULL);
   storage_free(s);
 }

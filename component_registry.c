@@ -4,16 +4,9 @@
 #include <stdio.h>
 #include <string.h>
 
-struct component_registry *component_registry_new() {
-  struct component_registry *registry = malloc(sizeof(*registry));
-
-  registry->count = 0;
-  // registry->capacity = capacity;
-  return registry;
-}
-
-void component_registry_free(struct component_registry *registry) {
-  free(registry);
+void component_registry_init(struct component_registry *reg) {
+  //
+  reg->count = 0;
 }
 
 size_t component_registry_add(struct component_registry *registry,

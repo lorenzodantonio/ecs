@@ -4,51 +4,46 @@
 #include <stdlib.h>
 #include <string.h>
 
-int entity_registry_exists(struct entity_registry *registry, entity e) {
+int entity_registry_exists(struct entity_registry *r, entity e) {
   uint32_t idx = entity_get_index(e);
-  return idx < registry->cursor && registry->entries[idx] == e;
+  return idx < r->cursor && r->entries[idx] == e;
 }
 
-struct entity_registry *entity_registry_new(void) {
-  struct entity_registry *registry = malloc(sizeof(*registry));
-  if (!registry) {
-    return NULL;
-  }
-
+void entity_registry_init(struct entity_registry *r) {
   for (size_t i = 0; i < INVALID_ENTITY_IDX; i++) {
-    registry->entries[i] = INVALID_ENTITY;
+    r->entries[i] = INVALID_ENTITY;
   }
-  registry->head = INVALID_ENTITY;
-  registry->cursor = 0;
-  registry->capacity = INVALID_ENTITY_IDX;
-
-  return registry;
+  r->head = INVALID_ENTITY;
+  r->cursor = 0;
+  // r->capacity = INVALID_ENTITY_IDX;
 }
 
-void entity_registry_free(struct entity_registry *registry) { free(registry); }
+entity entity_registry_next(struct entity_registry *r) {
+  uint32_t idx, ver;
 
-entity entity_registry_next(struct entity_registry *registry) {
-  entity e;
-  uint32_t idx;
-
-  if (registry->head != INVALID_ENTITY) {
-    idx = entity_get_index(registry->head);
-    e = entity_new(idx, entity_get_version(registry->head) + 1);
-    registry->head = registry->entries[idx];
+  if (r->head != INVALID_ENTITY) {
+    idx = entity_get_index(r->head);
+    ver = entity_get_version(r->head) + 1;
+    r->head = r->entries[idx];
   } else {
-    e = entity_new(registry->cursor, 0);
-    idx = registry->cursor++;
+    idx = r->cursor++;
+    ver = 0;
   }
-  registry->entries[idx] = e;
+
+  entity e = entity_new(idx, ver);
+  r->entries[idx] = e;
+
   return e;
 }
 
-int entity_registry_delete(struct entity_registry *registry, entity entity) {
-  if (!entity_registry_exists(registry, entity)) {
+int entity_registry_delete(struct entity_registry *r, entity e) {
+  if (!entity_registry_exists(r, e)) {
     return -1;
   }
-  uint32_t idx = entity_get_index(entity);
-  registry->entries[idx] = registry->head;
-  registry->head = entity;
+
+  uint32_t idx = entity_get_index(e);
+  r->entries[idx] = r->head;
+  r->head = e;
+
   return 0;
 }

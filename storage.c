@@ -6,21 +6,13 @@ struct storage *storage_new(void) {
     return NULL;
   }
 
-  storage->entities = entity_registry_new();
-  if (!storage->entities) {
-    return NULL;
-  }
-
-  storage->components = component_registry_new();
-  if (!storage->components) {
-    return NULL;
-  }
+  entity_registry_init(&storage->entities);
+  component_registry_init(&storage->components);
 
   return storage;
 }
 
 void storage_free(struct storage *s) {
-  entity_registry_free(s->entities);
-  component_registry_free(s->components);
+  //
   free(s);
 }
