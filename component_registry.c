@@ -84,3 +84,9 @@ int iterator_next(struct iterator *iter) {
 
   return match;
 }
+
+void component_registry_free(struct component_registry *registry) {
+  for (size_t i = 0; i < registry->count; i++) {
+    component_pool_free(&registry->pools[i]);
+  }
+}

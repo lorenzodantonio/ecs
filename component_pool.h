@@ -12,6 +12,8 @@ struct component_pool {
   void *data;
 };
 
+void component_pool_free(struct component_pool *pool);
+
 int component_pool_remove(struct component_pool *pool, entity entity);
 
 static inline void *component_pool_get_by_position(struct component_pool *pool,

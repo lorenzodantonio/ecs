@@ -58,5 +58,4 @@ int sparse_set_remove(struct sparse_set *set, entity e) {
 void sparse_set_free(struct sparse_set *set) {
   free(set->sparse);
   free(set->dense);
-  free(set);
 }

@@ -31,3 +31,8 @@ int component_pool_remove(struct component_pool *pool, entity e) {
 
   return 0;
 }
+
+void component_pool_free(struct component_pool *pool) {
+  sparse_set_free(&pool->entities);
+  free(pool->data);
+}

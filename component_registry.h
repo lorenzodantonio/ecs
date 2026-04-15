@@ -13,6 +13,7 @@ struct component_registry {
 };
 
 void component_registry_init(struct component_registry *registry);
+void component_registry_free(struct component_registry *registry);
 
 size_t component_registry_add(struct component_registry *registry,
                               size_t component_size, size_t capacity);
