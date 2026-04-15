@@ -26,7 +26,7 @@ static inline void storage_init_iterator(struct storage *storage,
                                          struct iterator *iter,
                                          size_t component_count,
                                          size_t component_ids[]) {
-  struct component_pool *pools[64];
+  struct component_pool *pools[MAX_COMPONENTS];
   for (size_t i = 0; i < component_count; i++) {
     pools[i] = component_registry_get(&storage->components, component_ids[i]);
   }
