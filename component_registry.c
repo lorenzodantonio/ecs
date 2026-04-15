@@ -25,9 +25,7 @@ size_t component_registry_add(struct component_registry *registry,
 int component_registry_purge_entity(struct component_registry *registry,
                                     entity e) {
   for (size_t i = 0; i < registry->count; i++) {
-    if (registry->pools[i].entities.sparse[entity_get_index(e)] != UINT32_MAX) {
-      component_pool_remove(&registry->pools[i], e);
-    }
+    component_pool_remove(&registry->pools[i], e);
   }
 
   return 0;
