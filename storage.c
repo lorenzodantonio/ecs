@@ -13,6 +13,6 @@ struct storage *storage_new(void) {
 }
 
 void storage_free(struct storage *s) {
-  //
+  component_registry_free(&s->components);
   free(s);
 }
