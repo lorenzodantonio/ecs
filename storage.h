@@ -17,6 +17,10 @@ static inline size_t storage_register_component(struct storage *storage,
   return component_registry_add(&storage->components, size, INVALID_ENTITY_IDX);
 }
 
+static inline size_t storage_register_tag(struct storage *storage) {
+  return component_registry_add(&storage->components, 0, INVALID_ENTITY_IDX);
+}
+
 static inline struct component_pool *storage_get_pool(struct storage *storage,
                                                       size_t component_id) {
   return component_registry_get(&storage->components, component_id);
