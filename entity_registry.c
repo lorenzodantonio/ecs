@@ -10,12 +10,11 @@ int entity_registry_exists(struct entity_registry *r, entity e) {
 }
 
 void entity_registry_init(struct entity_registry *r) {
-  for (size_t i = 0; i < INVALID_ENTITY_IDX; i++) {
+  for (size_t i = 0; i < ENTITY_IDX_MASK; i++) {
     r->entries[i] = INVALID_ENTITY;
   }
   r->head = INVALID_ENTITY;
   r->cursor = 0;
-  // r->capacity = INVALID_ENTITY_IDX;
 }
 
 entity entity_registry_next(struct entity_registry *r) {

@@ -10,9 +10,9 @@ typedef uint32_t entity;
   ((entity)(((version) << ENTITY_INDEX_BITS) | ((index) & 0xFFFFF)))
 
 enum {
-  INVALID_ENTITY_IDX = 0xFFFFF,
-  INVALID_ENTITY_VER = 0xFFF,
-  INVALID_ENTITY = ENTITY_PACK(INVALID_ENTITY_IDX, INVALID_ENTITY_VER),
+  ENTITY_IDX_MASK = 0xFFFFF,
+  ENTITY_VER_MASK = 0xFFF,
+  INVALID_ENTITY = ENTITY_PACK(ENTITY_IDX_MASK, 0xFFF),
 };
 
 static inline entity entity_new(uint32_t index, uint32_t version) {
@@ -20,7 +20,7 @@ static inline entity entity_new(uint32_t index, uint32_t version) {
 }
 
 static inline uint32_t entity_get_index(entity e) {
-  return e & INVALID_ENTITY_IDX;
+  return e & ENTITY_IDX_MASK;
 }
 
 static inline uint32_t entity_get_version(entity e) {

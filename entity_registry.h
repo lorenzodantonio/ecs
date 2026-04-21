@@ -9,8 +9,7 @@
 struct entity_registry {
   entity head;
   size_t cursor;
-  // size_t capacity;
-  entity entries[INVALID_ENTITY_IDX];
+  entity entries[ENTITY_IDX_MASK];
 };
 
 void entity_registry_init(struct entity_registry *r);
