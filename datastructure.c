@@ -4,8 +4,8 @@
 #include <stdio.h>
 #include <string.h>
 
-int sparse_set_init(struct sparse_set *set, size_t capacity) {
-  set->sparse = malloc(sizeof(uint32_t) * capacity);
+int sparse_set_init(struct sparse_set *set, uint32_t capacity) {
+  set->sparse = malloc(sizeof(uint32_t) * (size_t)capacity);
   set->dense = malloc(sizeof(entity) * capacity);
 
   for (size_t i = 0; i < capacity; i++) {
@@ -18,7 +18,7 @@ int sparse_set_init(struct sparse_set *set, size_t capacity) {
   return 0;
 }
 
-struct sparse_set *sparse_set_new(size_t capacity) {
+struct sparse_set *sparse_set_new(uint32_t capacity) {
   struct sparse_set *set = (struct sparse_set *)malloc(sizeof(*set));
   sparse_set_init(set, capacity);
   return set;

@@ -3,6 +3,7 @@
 #include "datastructure.h"
 #include "entity.h"
 #include <stdint.h>
+#include <stdio.h>
 
 struct component_pool {
   size_t id;
