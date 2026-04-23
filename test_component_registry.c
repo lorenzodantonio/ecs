@@ -14,12 +14,10 @@ void component_registry_add__succeeds(void) {
   component_registry_init(&registry);
   size_t component_size = sizeof(struct x { int y; });
   size_t max_entities = 16;
-  int component_id =
+  struct component_pool *pool =
       component_registry_add(&registry, component_size, max_entities);
 
-  assert(component_id == 0);
-
-  struct component_pool *pool = component_registry_get(&registry, component_id);
+  assert(pool->id == 0);
   assert(pool->component_size == component_size);
   assert(pool->capacity == max_entities);
 }

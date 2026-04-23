@@ -20,49 +20,34 @@ storage_create_entity(storage); // index: 2 version: 0
 The maximum number of active entities is 1.048.575 (2^20 - 1), each index can be recycled up to 4,096 times;
 
 ## Component
-Any C data type can be a component, registering it assigns a progressive id.
+Any C data type can be a component, registering it returns a component pool.
 ```c
 typedef struct {
     int x;
     int y;
 } Position;
 
-size_t position_id;
-
 int main(void) {
     struct storage *storage = storage_new();
-    position_id = storage_register_component(storage, sizeof(Position));
+    struct component_pool *positions = storage_register_component(storage, sizeof(Position));
     return 0;
 }
 ```
 
 Each component is associated with a pool which stores the component data in a contiguous array; a sparse set maps entities to component data.
 
-## Component Pool: Iterate over component data
-
-Component pools can be stored in global/local variables or retrieved using the id:
-
-```c
-...
-struct component_pool *positions = storage_get_pool(storage, position_id);
-for (size_t i = 0; i < positions->entities.count; i++) {
-    // do stuff
-}
-...
-```
-
 ## Iterator/View: Iterate through multiple pools
 An iterator can be instantiated in order to scan multiple component pools looking for entity data.
 ```c
 ...
-void move(struct storage *storage, float dt) {
+void move(struct component_pool *positions, struct component_pool *velocities,
+          float dt) {
   struct iterator iter;
-  storage_init_iterator(storage, &iter, 2,
-                        (size_t[]){position_id, velocity_id});
+  iterator_init(&iter, 2, (struct component_pool *[]){positions, velocities});
 
   while (iterator_next(&iter)) {
-    Position *pos = iter.data[position_id];
-    Velocity *vel = iter.data[velocity_id];
+    Position *pos = iter.data[positions->id];
+    Velocity *vel = iter.data[velocities->id];
 
     pos->x += vel->vx * dt;
     pos->y += vel->vy * dt;

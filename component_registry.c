@@ -9,8 +9,9 @@ void component_registry_init(struct component_registry *reg) {
   reg->count = 0;
 }
 
-size_t component_registry_add(struct component_registry *registry,
-                              size_t component_size, size_t capacity) {
+struct component_pool *
+component_registry_add(struct component_registry *registry,
+                       size_t component_size, size_t capacity) {
   assert(registry->count < MAX_COMPONENTS);
 
   size_t id = registry->count++;
@@ -19,7 +20,7 @@ size_t component_registry_add(struct component_registry *registry,
   pool->component_size = component_size;
   pool->data = malloc(component_size * capacity);
   sparse_set_init(&pool->entities, capacity);
-  return id;
+  return pool;
 }
 
 int component_registry_purge_entity(struct component_registry *registry,

@@ -15,17 +15,12 @@ struct component_registry {
 void component_registry_init(struct component_registry *registry);
 void component_registry_free(struct component_registry *registry);
 
-size_t component_registry_add(struct component_registry *registry,
-                              size_t component_size, size_t capacity);
+struct component_pool *
+component_registry_add(struct component_registry *registry,
+                       size_t component_size, size_t capacity);
 
 int component_registry_purge_entity(struct component_registry *registry,
                                     entity e);
-
-static inline struct component_pool *
-component_registry_get(struct component_registry *registry,
-                       size_t component_id) {
-  return &registry->pools[component_id];
-}
 
 struct iterator {
   size_t cursor;

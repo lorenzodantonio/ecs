@@ -12,29 +12,14 @@ struct storage {
 struct storage *storage_new(void);
 void storage_free(struct storage *s);
 
-static inline size_t storage_register_component(struct storage *storage,
-                                                size_t size) {
+static inline struct component_pool *
+storage_register_component(struct storage *storage, size_t size) {
   return component_registry_add(&storage->components, size, ENTITY_IDX_MASK);
 }
 
-static inline size_t storage_register_tag(struct storage *storage) {
+static inline struct component_pool *
+storage_register_tag(struct storage *storage) {
   return component_registry_add(&storage->components, 0, ENTITY_IDX_MASK);
-}
-
-static inline struct component_pool *storage_get_pool(struct storage *storage,
-                                                      size_t component_id) {
-  return component_registry_get(&storage->components, component_id);
-}
-
-static inline void storage_init_iterator(struct storage *storage,
-                                         struct iterator *iter,
-                                         size_t component_count,
-                                         size_t component_ids[]) {
-  struct component_pool *pools[MAX_COMPONENTS];
-  for (size_t i = 0; i < component_count; i++) {
-    pools[i] = component_registry_get(&storage->components, component_ids[i]);
-  }
-  iterator_init(iter, component_count, pools);
 }
 
 static inline entity storage_create_entity(struct storage *storage) {
