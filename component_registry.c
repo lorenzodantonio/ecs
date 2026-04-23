@@ -60,11 +60,11 @@ int iterator_next(struct iterator *iter) {
     e = iter->leader->entities.dense[iter->cursor];
 
     int inner_match = 1;
+    uint32_t idx = entity_get_index(e);
     size_t j = 0;
     while (inner_match && j < iter->component_count - 1) {
       struct component_pool *f = iter->followers[j++];
-      inner_match =
-          inner_match && f->entities.sparse[entity_get_index(e)] != UINT32_MAX;
+      inner_match = f->entities.sparse[idx] != UINT32_MAX;
     }
     match = inner_match;
     cursor = iter->cursor++;
@@ -75,7 +75,6 @@ int iterator_next(struct iterator *iter) {
   }
 
   iter->entity = e;
-
   iter->data[iter->leader->id] =
       component_pool_get_by_position(iter->leader, cursor);
   for (size_t k = 0; k < iter->component_count - 1; k++) {

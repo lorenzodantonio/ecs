@@ -46,8 +46,8 @@ void move(struct component_pool *positions, struct component_pool *velocities,
   iterator_init(&iter, 2, (struct component_pool *[]){positions, velocities});
 
   while (iterator_next(&iter)) {
-    Position *pos = iter.data[positions->id];
-    Velocity *vel = iter.data[velocities->id];
+    Position *pos = iterator_get_field(&iter, positions);
+    Velocity *vel = iterator_get_field(&iter, velocities);
 
     pos->x += vel->vx * dt;
     pos->y += vel->vy * dt;

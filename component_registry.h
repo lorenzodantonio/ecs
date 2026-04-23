@@ -34,3 +34,8 @@ struct iterator {
 void iterator_init(struct iterator *iter, size_t component_count,
                    struct component_pool **pools);
 int iterator_next(struct iterator *iter);
+
+static inline void *iterator_get_field(struct iterator *iter,
+                                       struct component_pool *pool) {
+  return iter->data[pool->id];
+}
