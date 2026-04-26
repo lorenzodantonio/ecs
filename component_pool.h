@@ -22,22 +22,15 @@ static inline void *component_pool_get_by_position(struct component_pool *pool,
 
 static inline void *component_pool_get_by_entity(struct component_pool *pool,
                                                  entity e) {
-  uint32_t pos = pool->entities.sparse[entity_get_index(e)];
+  uint32_t index = entity_get_index(e);
+  uint32_t pos =
+      pool->entities
+          .pages[sparse_set_get_page(index)][sparse_set_get_offset(index)];
   if (pos == UINT32_MAX) {
     return NULL;
   }
   return component_pool_get_by_position(pool, pos);
 }
 
-static inline void *component_pool_emplace(struct component_pool *pool,
-                                           entity e) {
-  int res = sparse_set_push(&pool->entities, e);
-  if (res == -1) {
-    fprintf(stderr, "error mapping entity to sparse set\n");
-    return NULL;
-  }
-
-  return component_pool_get_by_position(pool, pool->entities.count - 1);
-}
-
+void *component_pool_emplace(struct component_pool *pool, entity e);
 int component_pool_remove(struct component_pool *pool, entity entity);
