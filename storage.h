@@ -4,6 +4,8 @@
 #include "entity_registry.h"
 #include <stddef.h>
 
+#define INITIAL_ENTITIES 1024
+
 struct storage {
   struct entity_registry entities;
   struct component_registry components;
@@ -14,12 +16,12 @@ void storage_free(struct storage *s);
 
 static inline struct component_pool *
 storage_register_component(struct storage *storage, size_t size) {
-  return component_registry_add(&storage->components, size, ENTITY_IDX_MASK);
+  return component_registry_add(&storage->components, size, INITIAL_ENTITIES);
 }
 
 static inline struct component_pool *
 storage_register_tag(struct storage *storage) {
-  return component_registry_add(&storage->components, 0, ENTITY_IDX_MASK);
+  return component_registry_add(&storage->components, 0, INITIAL_ENTITIES);
 }
 
 static inline entity storage_create_entity(struct storage *storage) {
