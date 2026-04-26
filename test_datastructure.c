@@ -8,8 +8,8 @@ void sparse_set_new__succeeds(void) {
   assert(s->capacity == 8);
   assert(s->count == 0);
 
-  for (size_t i = 0; i < s->capacity; i++) {
-    assert(s->sparse[i] == UINT32_MAX);
+  for (size_t i = 0; i < s->page_count; i++) {
+    assert(s->pages[i] == NULL);
   }
 
   sparse_set_free(s);
@@ -21,7 +21,11 @@ void sparse_set_push__succeds(void) {
   int r = sparse_set_push(s, e);
   assert(r == 0);
   assert(s->count == 1);
-  size_t dense_pos = s->sparse[entity_get_index(e)];
+
+  uint32_t idx = entity_get_index(e);
+  uint32_t page = sparse_set_get_page(idx);
+  uint32_t offset = sparse_set_get_offset(idx);
+  size_t dense_pos = s->pages[page][offset];
   assert(dense_pos == s->count - 1);
   sparse_set_free(s);
 }
@@ -45,7 +49,11 @@ void sparse_set_remove__succeeds_with_last_element(void) {
   int r = sparse_set_remove(s, e);
   assert(r == 0);
   assert(s->count == 0);
-  assert(s->sparse[entity_get_index(e)] == UINT32_MAX);
+
+  uint32_t idx = entity_get_index(e);
+  uint32_t page = sparse_set_get_page(idx);
+  uint32_t offset = sparse_set_get_offset(idx);
+  assert(s->pages[page][offset] == UINT32_MAX);
 
   sparse_set_free(s);
 }
@@ -58,12 +66,26 @@ void sparse_set_remove__swaps_last_dense_array_element(void) {
   sparse_set_push(s, entity_new(3, 3));
 
   entity last_entity = s->dense[s->count - 1];
-  size_t to_delete_dense_pos = s->sparse[e_idx];
+  uint32_t idx = entity_get_index(e);
+  uint32_t page = sparse_set_get_page(idx);
+  uint32_t offset = sparse_set_get_offset(idx);
 
-  int r = sparse_set_remove(s, e);
-  assert(r == 0);
+  size_t to_delete_dense_pos =
+      s->pages[sparse_set_get_page(e_idx)][sparse_set_get_offset(e_idx)];
+
+  int res = sparse_set_remove(s, e);
+
+  assert(res == 0);
+  //   assert(s->count == 1);
+
   assert(s->dense[to_delete_dense_pos] == last_entity);
-  assert(s->sparse[e_idx] == UINT32_MAX);
+
+  uint32_t last_idx = entity_get_index(last_entity);
+  uint32_t last_page = sparse_set_get_page(last_idx);
+  uint32_t last_offset = sparse_set_get_offset(last_idx);
+  assert(s->pages[last_page][last_offset] == to_delete_dense_pos);
+
+  assert(s->pages[page][offset] == UINT32_MAX);
 
   sparse_set_free(s);
 }
@@ -73,7 +95,11 @@ void sparse_set_remove__fails_if_element_does_not_exist(void) {
   entity e = entity_new(1, 4);
   int r = sparse_set_remove(s, e);
   assert(r == -1);
-  assert(s->sparse[entity_get_index(e)] == UINT32_MAX);
+
+  uint32_t idx = entity_get_index(e);
+  uint32_t page = sparse_set_get_page(idx);
+
+  assert(s->pages[page] == NULL);
   assert(s->count == 0);
 
   sparse_set_free(s);
