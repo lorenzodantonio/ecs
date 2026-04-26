@@ -4,11 +4,20 @@
 #include <stdio.h>
 #include <string.h>
 
+void component_pool_init(struct component_pool *pool, size_t id,
+                         size_t component_size, size_t capacity) {
+  pool->id = id;
+  pool->component_size = component_size;
+  pool->data = malloc(component_size * capacity);
+  sparse_set_init(&pool->entities, capacity);
+}
+
 void *component_pool_emplace(struct component_pool *pool, entity e) {
   if (pool->entities.count >= pool->capacity) {
     sparse_set_dense_realloc_nocheck(&pool->entities);
     pool->data =
         realloc(pool->data, pool->component_size * pool->entities.capacity);
+    pool->capacity = pool->entities.capacity;
     assert(pool->data);
   }
 

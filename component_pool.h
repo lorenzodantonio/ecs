@@ -13,6 +13,8 @@ struct component_pool {
   void *data;
 };
 
+void component_pool_init(struct component_pool *pool, size_t id,
+                         size_t component_size, size_t capacity);
 void component_pool_free(struct component_pool *pool);
 
 static inline void *component_pool_get_by_position(struct component_pool *pool,

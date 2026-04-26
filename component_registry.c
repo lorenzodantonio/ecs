@@ -16,10 +16,7 @@ component_registry_add(struct component_registry *registry,
 
   size_t id = registry->count++;
   struct component_pool *pool = &registry->pools[id];
-  pool->id = id;
-  pool->component_size = component_size;
-  pool->data = malloc(component_size * capacity);
-  sparse_set_init(&pool->entities, capacity);
+  component_pool_init(pool, id, component_size, capacity);
   return pool;
 }
 
