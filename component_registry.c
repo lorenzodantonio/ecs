@@ -62,10 +62,12 @@ int iterator_next(struct iterator *iter) {
     int inner_match = 1;
     uint32_t idx = entity_get_index(e);
     size_t j = 0;
+    uint32_t page = sparse_set_get_page(idx);
+    uint32_t offset = sparse_set_get_offset(idx);
     while (inner_match && j < iter->component_count - 1) {
       struct component_pool *f = iter->followers[j++];
-      inner_match = f->entities.pages[sparse_set_get_page(idx)]
-                                     [sparse_set_get_offset(idx)] != UINT32_MAX;
+      inner_match = f->entities.pages[page] != NULL &&
+                    f->entities.pages[page][offset] != UINT32_MAX;
     }
     match = inner_match;
     cursor = iter->cursor++;
