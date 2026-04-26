@@ -64,7 +64,8 @@ int iterator_next(struct iterator *iter) {
     size_t j = 0;
     while (inner_match && j < iter->component_count - 1) {
       struct component_pool *f = iter->followers[j++];
-      inner_match = f->entities.sparse[idx] != UINT32_MAX;
+      inner_match = f->entities.pages[sparse_set_get_page(idx)]
+                                     [sparse_set_get_offset(idx)] != UINT32_MAX;
     }
     match = inner_match;
     cursor = iter->cursor++;
