@@ -19,5 +19,5 @@ void component_registry_add__succeeds(void) {
 
   assert(pool->id == 0);
   assert(pool->component_size == component_size);
-  assert(pool->capacity == max_entities);
+  assert(pool->entities.capacity == max_entities);
 }

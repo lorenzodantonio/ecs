@@ -7,7 +7,6 @@
 
 struct component_pool {
   size_t id;
-  size_t capacity;
   size_t component_size;
   struct sparse_set entities;
   void *data;
