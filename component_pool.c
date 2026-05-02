@@ -13,12 +13,13 @@ void component_pool_init(struct component_pool *pool, size_t id,
 }
 
 void *component_pool_emplace(struct component_pool *pool, entity e) {
-  if (pool->entities.count >= pool->capacity) {
+  if (pool->entities.count >= pool->entities.capacity) {
     sparse_set_dense_realloc_nocheck(&pool->entities);
-    pool->data =
+
+    void *new_data =
         realloc(pool->data, pool->component_size * pool->entities.capacity);
-    pool->capacity = pool->entities.capacity;
-    assert(pool->data);
+    assert(new_data);
+    pool->data = new_data;
   }
 
   uint32_t idx = entity_get_index(e);
