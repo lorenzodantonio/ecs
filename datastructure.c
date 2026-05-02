@@ -5,7 +5,7 @@
 #include <string.h>
 
 int sparse_set_init(struct sparse_set *set, uint32_t capacity) {
-  uint32_t page_count = ((size_t)capacity + PAGE_MASK) >> PAGE_SHIFT;
+  uint32_t page_count = (ENTITY_IDX_MASK >> PAGE_SHIFT) + 1;
 
   set->pages = calloc(page_count, sizeof(uint32_t *));
   set->dense = malloc(sizeof(entity) * capacity);
