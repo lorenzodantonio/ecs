@@ -32,3 +32,5 @@ static inline void storage_delete_entity(struct storage *storage,
   component_registry_purge_entity(&storage->components, entity);
   entity_registry_delete(&storage->entities, entity);
 }
+
+void *storage_emplace_component(struct storage *storage, struct component_pool *pool, entity e);
