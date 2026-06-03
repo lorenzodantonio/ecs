@@ -1,9 +1,7 @@
 #pragma once
 
 #include "component_pool.h"
-#include "datastructure.h"
 #include "entity.h"
-#include <stdint.h>
 
 #define MAX_COMPONENTS 64
 

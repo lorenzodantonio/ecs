@@ -2,7 +2,6 @@
 
 #include "component_registry.h"
 #include "entity_registry.h"
-#include <stddef.h>
 
 #define INITIAL_ENTITIES 1024
 

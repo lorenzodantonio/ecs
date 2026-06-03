@@ -1,8 +1,5 @@
 #include "component_pool.h"
 #include <assert.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <string.h>
 
 void component_pool_init(struct component_pool *pool, size_t id,
                          size_t component_size, size_t capacity) {

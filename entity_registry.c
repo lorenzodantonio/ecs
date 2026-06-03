@@ -1,11 +1,7 @@
 #include "entity_registry.h"
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
-int entity_registry_exists(struct entity_registry *r, entity e) {
-  uint32_t idx = entity_get_index(e);
+int entity_registry_exists(const struct entity_registry *r, entity e) {
+  const uint32_t idx = entity_get_index(e);
   return idx < r->cursor && r->entries[idx] == e;
 }
 
@@ -29,7 +25,7 @@ entity entity_registry_next(struct entity_registry *r) {
     ver = 0;
   }
 
-  entity e = entity_new(idx, ver);
+  const entity e = entity_new(idx, ver);
   r->entries[idx] = e;
 
   return e;
@@ -40,7 +36,7 @@ int entity_registry_delete(struct entity_registry *r, entity e) {
     return -1;
   }
 
-  uint32_t idx = entity_get_index(e);
+  const uint32_t idx = entity_get_index(e);
   r->entries[idx] = r->head;
   r->head = e;
 

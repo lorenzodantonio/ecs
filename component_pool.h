@@ -2,8 +2,7 @@
 
 #include "datastructure.h"
 #include "entity.h"
-#include <stdint.h>
-#include <stdio.h>
+#include <stdlib.h>
 
 struct component_pool {
   size_t id;
@@ -23,10 +22,14 @@ static inline void *component_pool_get_by_position(struct component_pool *pool,
 
 static inline void *component_pool_get_by_entity(struct component_pool *pool,
                                                  entity e) {
-  uint32_t index = entity_get_index(e);
-  uint32_t pos =
-      pool->entities
-          .pages[sparse_set_get_page(index)][sparse_set_get_offset(index)];
+
+  const uint32_t index = entity_get_index(e);
+  const uint32_t *page = pool->entities.pages[sparse_set_get_page(index)];
+  if (!page) {
+    return NULL;
+  }
+
+  const uint32_t pos = page[sparse_set_get_offset(index)];
   if (pos == UINT32_MAX) {
     return NULL;
   }

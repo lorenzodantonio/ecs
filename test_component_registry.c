@@ -1,7 +1,6 @@
 #include "test_component_registry.h"
 #include "component_registry.h"
 #include <assert.h>
-#include <stdint.h>
 
 void component_registry_new__succeeds(void) {
   struct component_registry registry;

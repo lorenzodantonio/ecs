@@ -1,8 +1,6 @@
 #include "component_registry.h"
 #include <assert.h>
-#include <stdint.h>
 #include <stdio.h>
-#include <string.h>
 
 void component_registry_init(struct component_registry *reg) {
   //
@@ -14,7 +12,7 @@ component_registry_add(struct component_registry *registry,
                        size_t component_size, size_t capacity) {
   assert(registry->count < MAX_COMPONENTS);
 
-  size_t id = registry->count++;
+  const size_t id = registry->count++;
   struct component_pool *pool = &registry->pools[id];
   component_pool_init(pool, id, component_size, capacity);
   return pool;
@@ -49,7 +47,7 @@ void iterator_init(struct iterator *iter, size_t component_count,
 }
 
 int iterator_next(struct iterator *iter) {
-  size_t cursor;
+  size_t cursor = 0;
   entity e = INVALID_ENTITY;
 
   int match = 0;
@@ -57,12 +55,12 @@ int iterator_next(struct iterator *iter) {
     e = iter->leader->entities.dense[iter->cursor];
 
     int inner_match = 1;
-    uint32_t idx = entity_get_index(e);
+    const uint32_t idx = entity_get_index(e);
     size_t j = 0;
-    uint32_t page = sparse_set_get_page(idx);
-    uint32_t offset = sparse_set_get_offset(idx);
+    const uint32_t page = sparse_set_get_page(idx);
+    const uint32_t offset = sparse_set_get_offset(idx);
     while (inner_match && j < iter->component_count - 1) {
-      struct component_pool *f = iter->followers[j++];
+      const struct component_pool *f = iter->followers[j++];
       inner_match = f->entities.pages[page] != NULL &&
                     f->entities.pages[page][offset] != UINT32_MAX;
     }

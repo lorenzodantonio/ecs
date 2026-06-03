@@ -1,10 +1,6 @@
 #include "component_registry.h"
-#include "entity_registry.h"
 #include "storage.h"
-#include <stdint.h>
-#include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 typedef struct {
   int x;

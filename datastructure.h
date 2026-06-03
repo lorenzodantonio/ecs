@@ -41,9 +41,10 @@ static inline uint32_t *sparse_set_allocate_page_nocheck(struct sparse_set *set,
 }
 
 static inline void sparse_set_dense_realloc_nocheck(struct sparse_set *set) {
-  uint32_t new_cap = set->capacity * 2;
-  set->dense = realloc(set->dense, sizeof(entity) * new_cap);
-  assert(set->dense);
+  const uint32_t new_cap = set->capacity * 2;
+  entity *new_dense = realloc(set->dense, sizeof(entity) * new_cap);
+  assert(new_dense);
+  set->dense = new_dense;
   set->capacity = new_cap;
 }
 
