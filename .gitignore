@@ -5,3 +5,12 @@ test_runner
 *.gcno
 out/
 coverage.info
+
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+compile_commands.json
+
+.idea/
+cmake-build-*/
+build/

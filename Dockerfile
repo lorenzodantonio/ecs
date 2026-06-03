@@ -1,13 +1,15 @@
 FROM gcc:latest AS core_builder
+RUN apt-get update && apt-get install -y cmake lcov
 COPY . /usr/src/storage
 WORKDIR /usr/src/storage
+# Generate Makefile using CMake
+RUN cmake .
 
 FROM core_builder AS builder
-RUN make build
+RUN make storage
 
 FROM core_builder AS tester
-RUN apt-get update && apt-get install -y lcov
-CMD ["make", "test"]
+CMD make test_runner && ./test_runner
 
 FROM debian:bookworm-slim
 WORKDIR /root/
