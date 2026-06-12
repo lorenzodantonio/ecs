@@ -1,15 +1,21 @@
 #include "datastructure.h"
-
-#include <stdint.h>
 #include <stdio.h>
-#include <string.h>
 
 int sparse_set_init(struct sparse_set *set, uint32_t capacity) {
-  uint32_t page_count = (ENTITY_IDX_MASK >> PAGE_SHIFT) + 1;
+  const uint32_t page_count = (ENTITY_IDX_MASK >> PAGE_SHIFT) + 1;
+  uint32_t **pages = calloc(page_count, sizeof(uint32_t *));
+  if (!pages) {
+    return -1;
+  }
 
-  set->pages = calloc(page_count, sizeof(uint32_t *));
-  set->dense = malloc(sizeof(entity) * capacity);
+  entity *dense = malloc(sizeof(entity) * capacity);
+  if (!dense) {
+    free(pages);
+    return -1;
+  }
 
+  set->pages = pages;
+  set->dense = dense;
   set->page_count = page_count;
 
   set->count = 0;
@@ -19,8 +25,14 @@ int sparse_set_init(struct sparse_set *set, uint32_t capacity) {
 }
 
 struct sparse_set *sparse_set_new(uint32_t capacity) {
-  struct sparse_set *set = (struct sparse_set *)malloc(sizeof(*set));
-  sparse_set_init(set, capacity);
+  struct sparse_set *set = malloc(sizeof(*set));
+  if (!set) {
+    return NULL;
+  }
+
+  if (sparse_set_init(set, capacity) == -1) {
+    return NULL;
+  }
   return set;
 }
 
@@ -29,9 +41,9 @@ int sparse_set_push(struct sparse_set *set, entity e) {
     sparse_set_dense_realloc_nocheck(set);
   }
 
-  uint32_t idx = entity_get_index(e);
-  uint32_t page_num = sparse_set_get_page(idx);
-  uint32_t offset = sparse_set_get_offset(idx);
+  const uint32_t idx = entity_get_index(e);
+  const uint32_t page_num = sparse_set_get_page(idx);
+  const uint32_t offset = sparse_set_get_offset(idx);
 
   // handle pages
   if (!set->pages[page_num]) {
@@ -51,16 +63,14 @@ int sparse_set_push(struct sparse_set *set, entity e) {
 }
 
 int sparse_set_remove(struct sparse_set *set, entity e) {
-  uint32_t idx = entity_get_index(e);
-
-  uint32_t page_num = sparse_set_get_page(idx);
+  const uint32_t idx = entity_get_index(e);
+  const uint32_t page_num = sparse_set_get_page(idx);
   if (set->pages[page_num] == NULL) {
     return -1;
   }
 
-  uint32_t offset = sparse_set_get_offset(idx);
-
-  uint32_t position = set->pages[page_num][offset];
+  const uint32_t offset = sparse_set_get_offset(idx);
+  const uint32_t position = set->pages[page_num][offset];
   if (position == UINT32_MAX) {
     return -1;
   }
@@ -70,8 +80,8 @@ int sparse_set_remove(struct sparse_set *set, entity e) {
     return 0;
   }
 
-  entity last_entity = set->dense[set->count];
-  uint32_t last_idx = entity_get_index(last_entity);
+  const entity last_entity = set->dense[set->count];
+  const uint32_t last_idx = entity_get_index(last_entity);
   set->pages[sparse_set_get_page(last_idx)][sparse_set_get_offset(last_idx)] =
       position;
   set->dense[position] = last_entity;
