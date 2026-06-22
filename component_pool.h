@@ -22,7 +22,6 @@ static inline void *component_pool_get_by_position(struct component_pool *pool,
 
 static inline void *component_pool_get_by_entity(struct component_pool *pool,
                                                  entity e) {
-
   const uint32_t index = entity_get_index(e);
   const uint32_t *page = pool->entities.pages[sparse_set_get_page(index)];
   if (!page) {

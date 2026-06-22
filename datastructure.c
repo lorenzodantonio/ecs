@@ -89,11 +89,16 @@ int sparse_set_remove(struct sparse_set *set, entity e) {
   return 0;
 }
 
-void sparse_set_free(struct sparse_set *set) {
+void sparse_set_deinit(struct sparse_set *set) {
   for (uint32_t i = 0; i < set->page_count; i++) {
     free(set->pages[i]);
   }
 
   free(set->pages);
   free(set->dense);
+}
+
+void sparse_set_free(struct sparse_set *set) {
+  sparse_set_deinit(set);
+  free(set);
 }
