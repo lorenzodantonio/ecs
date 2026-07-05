@@ -12,7 +12,7 @@ typedef struct {
 } Velocity;
 
 void reset_position(struct component_pool *positions) {
-  for (size_t i = 0; i < positions->entities.count; i++) {
+  for (size_t i = positions->entities.count; i-- > 0; ) {
     Position *pos = component_pool_get_by_position(positions, i);
 
     if (pos->x >= 600) {
@@ -46,8 +46,8 @@ int main(void) {
   struct component_pool *velocities =
       storage_register_component(storage, sizeof(Velocity));
 
-  entity id0 = storage_create_entity(storage);
-  entity id1 = storage_create_entity(storage);
+  const entity id0 = storage_create_entity(storage);
+  const entity id1 = storage_create_entity(storage);
 
   Velocity *v0 = storage_emplace_component(storage, velocities, id0);
   v0->vx = 8;

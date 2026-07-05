@@ -42,16 +42,17 @@ void iterator_init(struct iterator *iter, size_t component_count,
   }
   iter->leader = leader;
   iter->entity = INVALID_ENTITY;
-  iter->cursor = 0;
+  iter->cursor = leader->entities.count;
   iter->component_count = component_count;
 }
 
 int iterator_next(struct iterator *iter) {
-  size_t cursor = 0;
+  size_t cursor = 0; // tmp
   entity e = INVALID_ENTITY;
 
   int match = 0;
-  while (!match && iter->cursor < iter->leader->entities.count) {
+  while (!match && iter->cursor) {
+    cursor = --iter->cursor;
     e = iter->leader->entities.dense[iter->cursor];
 
     int inner_match = 1;
@@ -65,7 +66,6 @@ int iterator_next(struct iterator *iter) {
                     f->entities.pages[page][offset] != UINT32_MAX;
     }
     match = inner_match;
-    cursor = iter->cursor++;
   }
 
   if (!match) {
