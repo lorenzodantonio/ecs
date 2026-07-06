@@ -1,9 +1,8 @@
-# Storage
-![For Learning](https://img.shields.io/badge/purpose-learning-teal)
-![Experimental](https://img.shields.io/badge/status-experimental-orange)
+# ECS
+![Status](https://img.shields.io/badge/status-experimental-orange)
 
 ## Overview
-Data storage based on ECS
+ECS-based data management library
 
 ## Entity
 An entity is a unique identifier composed of an index in the least significant bits and a version in the remaining 12.
@@ -35,6 +34,24 @@ int main(void) {
 ```
 
 Each component is associated with a pool which stores the component data in a contiguous array; a sparse set maps entities to component data.
+
+## Single component iteration
+```c
+...
+void reset_position(struct component_pool *positions) {
+  for (size_t i = positions->entities.count; i-- > 0; ) {
+    Position *pos = component_pool_get_by_position(positions, i);
+
+    if (pos->x >= 600) {
+      pos->x = 0;
+    }
+    if (pos->y >= 600) {
+      pos->y = 0;
+    }
+  }
+}
+...
+```
 
 ## Iterator/View: Iterate through multiple pools
 An iterator can be instantiated in order to scan multiple component pools looking for entity data.
