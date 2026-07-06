@@ -1,4 +1,5 @@
-#pragma once
+#ifndef COMPONENT_REGISTRY_H
+#define COMPONENT_REGISTRY_H
 
 #include "component_pool.h"
 #include "entity.h"
@@ -37,3 +38,5 @@ static inline void *iterator_get_field(struct iterator *iter,
                                        struct component_pool *pool) {
   return iter->data[pool->id];
 }
+
+ #endif

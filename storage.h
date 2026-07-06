@@ -1,4 +1,5 @@
-#pragma once
+#ifndef STORAGE_H
+#define STORAGE_H
 
 #include "component_registry.h"
 #include "entity_registry.h"
@@ -34,3 +35,5 @@ static inline void storage_delete_entity(struct storage *storage,
 }
 
 void *storage_emplace_component(struct storage *storage, struct component_pool *pool, entity e);
+
+#endif

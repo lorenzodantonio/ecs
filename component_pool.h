@@ -1,4 +1,5 @@
-#pragma once
+#ifndef COMPONENT_POOL_H
+#define COMPONENT_POOL_H
 
 #include "datastructure.h"
 #include "entity.h"
@@ -45,3 +46,5 @@ static inline int tag(struct component_pool *pool, entity e) {
 static inline int untag(struct component_pool *pool, entity e) {
   return sparse_set_remove(&pool->entities, e);
 }
+
+#endif

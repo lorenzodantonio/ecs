@@ -1,4 +1,5 @@
-#pragma once
+#ifndef ENTITY_REGISTRY_H
+#define ENTITY_REGISTRY_H
 
 #include "entity.h"
 #include <stdlib.h>
@@ -14,3 +15,5 @@ int entity_registry_exists(const struct entity_registry *r, entity e);
 
 entity entity_registry_next(struct entity_registry *r);
 int entity_registry_delete(struct entity_registry *r, entity e);
+
+#endif

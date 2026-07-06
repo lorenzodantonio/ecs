@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.10)
 project(storage C)
 
 set(CMAKE_C_STANDARD 11)
-add_compile_options(-Wall -Wextra -O2)
+add_compile_options(-Wall -Wextra -O2 -pedantic)
 
 file(GLOB ALL_SOURCES "*.c")
 list(REMOVE_ITEM ALL_SOURCES

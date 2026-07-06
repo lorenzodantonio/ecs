@@ -1,5 +1,5 @@
-
-#pragma once
+#ifndef DATASTRUCTURE_H
+#define DATASTRUCTURE_H
 
 #include "entity.h"
 #include <assert.h>
@@ -61,3 +61,5 @@ static inline void sparse_set_push_nocheck(struct sparse_set *set,
                                            uint32_t entity) {
   sparse_set_map_nocheck(set, page, offset, set->count++, entity);
 }
+
+#endif
