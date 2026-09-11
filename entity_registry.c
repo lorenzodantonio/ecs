@@ -9,6 +9,7 @@ void entity_registry_init(struct entity_registry *r) {
   for (size_t i = 0; i < ENTITY_IDX_MASK; i++) {
     r->entries[i] = INVALID_ENTITY;
   }
+  r->count = 0;
   r->head = INVALID_ENTITY;
   r->cursor = 0;
 }
@@ -28,6 +29,8 @@ entity entity_registry_next(struct entity_registry *r) {
   const entity e = entity_new(idx, ver);
   r->entries[idx] = e;
 
+  r->count += 1;
+
   return e;
 }
 
@@ -39,6 +42,8 @@ int entity_registry_delete(struct entity_registry *r, entity e) {
   const uint32_t idx = entity_get_index(e);
   r->entries[idx] = r->head;
   r->head = e;
+
+  r->count--;
 
   return 0;
 }

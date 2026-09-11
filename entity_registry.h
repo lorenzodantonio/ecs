@@ -6,6 +6,7 @@
 
 struct entity_registry {
   entity head;
+  size_t count;
   size_t cursor;
   entity entries[ENTITY_IDX_MASK];
 };
