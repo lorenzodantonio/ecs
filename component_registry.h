@@ -39,4 +39,4 @@ static inline void *iterator_get_field(struct iterator *iter,
   return iter->data[pool->id];
 }
 
- #endif
+#endif
