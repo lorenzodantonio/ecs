@@ -7,3 +7,8 @@ void storage_new__succeeds(void) {
   assert(s != NULL);
   storage_free(s);
 }
+
+int main(void) {
+  storage_new__succeeds();
+  return 0;
+}

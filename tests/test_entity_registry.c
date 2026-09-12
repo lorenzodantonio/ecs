@@ -60,3 +60,18 @@ void entity_registry_exists__fails(void) {
   entity_registry_init(&r);
   assert(entity_registry_exists(&r, 100) == 0);
 }
+
+int main(void) {
+  entity_registry_new__succeeds();
+
+  entity_registry_delete__succeeds();
+  entity_registry_delete__fails_if_entity_does_not_exist();
+  entity_registry_delete__fails_if_entity_already_deleted();
+
+  entity_registry_next__succeeds();
+  entity_registry_next__reuse_last_index_deleted();
+
+  entity_registry_exists__succeeds();
+  entity_registry_exists__fails();
+  return 0;
+}
