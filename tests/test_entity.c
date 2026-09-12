@@ -1,6 +1,6 @@
 #include "test_entity.h"
 
-#include "entity_registry.h"
+#include "ecs/entity_registry.h"
 #include <assert.h>
 
 void entity_new__succeeds(void) {

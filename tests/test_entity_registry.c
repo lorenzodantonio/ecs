@@ -1,4 +1,4 @@
-#include "entity_registry.h"
+#include "ecs/entity_registry.h"
 #include <assert.h>
 
 void entity_registry_new__succeeds(void) {

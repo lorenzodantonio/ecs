@@ -1,4 +1,4 @@
-#include "entity_registry.h"
+#include "ecs/entity_registry.h"
 
 int entity_registry_exists(const struct entity_registry *r, entity e) {
   const uint32_t idx = entity_get_index(e);

@@ -1,8 +1,8 @@
 #ifndef COMPONENT_REGISTRY_H
 #define COMPONENT_REGISTRY_H
 
-#include "component_pool.h"
 #include "entity.h"
+#include "component_pool.h"
 
 #define MAX_COMPONENTS 64
 

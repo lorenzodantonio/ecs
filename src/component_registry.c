@@ -1,4 +1,4 @@
-#include "component_registry.h"
+#include "ecs/component_registry.h"
 #include <assert.h>
 #include <stdio.h>
 
@@ -25,6 +25,12 @@ int component_registry_purge_entity(struct component_registry *registry,
   }
 
   return 0;
+}
+
+void component_registry_free(struct component_registry *registry) {
+  for (size_t i = 0; i < registry->count; i++) {
+    component_pool_free(&registry->pools[i]);
+  }
 }
 
 void iterator_init(struct iterator *iter, size_t component_count,
@@ -81,10 +87,4 @@ int iterator_next(struct iterator *iter) {
   }
 
   return match;
-}
-
-void component_registry_free(struct component_registry *registry) {
-  for (size_t i = 0; i < registry->count; i++) {
-    component_pool_free(&registry->pools[i]);
-  }
 }

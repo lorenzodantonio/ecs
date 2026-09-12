@@ -1,5 +1,5 @@
-#include "datastructure.h"
-#include <stdio.h>
+#include "ecs/datastructure.h"
+#include <stdlib.h>
 
 int sparse_set_init(struct sparse_set *set, uint32_t capacity) {
   const uint32_t page_count = (ENTITY_IDX_MASK >> PAGE_SHIFT) + 1;

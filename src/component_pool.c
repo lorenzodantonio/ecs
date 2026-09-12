@@ -1,4 +1,4 @@
-#include "component_pool.h"
+#include "ecs/component_pool.h"
 #include <assert.h>
 
 void component_pool_init(struct component_pool *pool, size_t id,

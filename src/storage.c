@@ -1,4 +1,4 @@
-#include "storage.h"
+#include "ecs/storage.h"
 
 struct storage *storage_new(void) {
   struct storage *storage = malloc(sizeof(*storage));

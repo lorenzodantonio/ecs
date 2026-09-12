@@ -1,5 +1,4 @@
-#include "component_registry.h"
-#include "storage.h"
+#include "include/ecs/storage.h"
 #include <stdlib.h>
 
 typedef struct {

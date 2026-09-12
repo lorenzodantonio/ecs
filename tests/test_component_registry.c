@@ -1,5 +1,5 @@
 #include "test_component_registry.h"
-#include "component_registry.h"
+#include "ecs/component_registry.h"
 #include <assert.h>
 
 void component_registry_new__succeeds(void) {

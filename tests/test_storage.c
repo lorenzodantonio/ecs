@@ -1,5 +1,5 @@
 #include "test_storage.h"
-#include "storage.h"
+#include "ecs/storage.h"
 #include <assert.h>
 
 void storage_new__succeeds(void) {
