@@ -49,17 +49,14 @@ static inline void sparse_set_dense_realloc_nocheck(struct sparse_set *set) {
   set->capacity = new_cap;
 }
 
-static inline void sparse_set_map_nocheck(struct sparse_set *set, uint32_t page,
-                                          uint32_t offset, uint32_t dense_pos,
-                                          entity entity) {
-  set->pages[page][offset] = dense_pos;
-  set->dense[dense_pos] = entity;
+static inline void sparse_set_map_nocheck(struct sparse_set *set, entity e, uint32_t position) {
+  const uint32_t idx = entity_get_index(e);
+  set->pages[sparse_set_get_page(idx)][sparse_set_get_offset(idx)] = position;
+  set->dense[position] = e;
 }
 
-static inline void sparse_set_push_nocheck(struct sparse_set *set,
-                                           uint32_t page, uint32_t offset,
-                                           uint32_t entity) {
-  sparse_set_map_nocheck(set, page, offset, set->count++, entity);
+static inline void sparse_set_push_nocheck(struct sparse_set *set, uint32_t entity) {
+  sparse_set_map_nocheck(set, entity, set->count++);
 }
 
 #endif

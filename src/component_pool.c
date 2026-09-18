@@ -21,14 +21,12 @@ void *component_pool_emplace(struct component_pool *pool, entity e) {
     pool->data = new_data;
   }
 
-  const uint32_t idx = entity_get_index(e);
-  const uint32_t page_num = sparse_set_get_page(idx);
-  const uint32_t offset = sparse_set_get_offset(idx);
+  const uint32_t page_num = sparse_set_get_page(entity_get_index(e));
 
   if (pool->entities.pages[page_num] == NULL) {
     sparse_set_allocate_page_nocheck(&pool->entities, page_num);
   }
-  sparse_set_push_nocheck(&pool->entities, page_num, offset, e);
+  sparse_set_push_nocheck(&pool->entities, e);
 
   return component_pool_get_by_position(pool, pool->entities.count - 1);
 }
@@ -62,11 +60,7 @@ int component_pool_remove(struct component_pool *pool, entity e) {
          component_pool_get_by_position(pool, count), pool->component_size);
 
   const entity last_entity = pool->entities.dense[count];
-  const uint32_t last_idx = entity_get_index(last_entity);
-
-  sparse_set_map_nocheck(&pool->entities, sparse_set_get_page(last_idx),
-                         sparse_set_get_offset(last_idx), dense_idx,
-                         last_entity);
+  sparse_set_map_nocheck(&pool->entities, last_entity, dense_idx);
 
   return 0;
 }
