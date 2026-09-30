@@ -5,9 +5,12 @@ void component_pool_init(struct component_pool *pool, size_t id,
                          size_t component_size, size_t capacity) {
   pool->id = id;
   pool->component_size = component_size;
-  if (capacity > 0) {
+  if (component_size) {
     pool->data = malloc(component_size * capacity);
+  } else {
+    pool->data = NULL;
   }
+
   sparse_set_init(&pool->entities, capacity);
 }
 
