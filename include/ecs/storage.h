@@ -28,10 +28,15 @@ static inline entity storage_create_entity(struct storage *storage) {
   return entity_registry_next(&storage->entities);
 }
 
-static inline void storage_delete_entity(struct storage *storage,
-                                         entity entity) {
-  component_registry_purge_entity(&storage->components, entity);
-  entity_registry_delete(&storage->entities, entity);
+static inline int storage_delete_entity(struct storage *storage,
+                                         entity e) {
+  const int res = entity_registry_delete(&storage->entities, e);
+  if (res == -1) {
+    return -1;
+  }
+
+  component_registry_purge_entity(&storage->components, e);
+  return 0;
 }
 
 void *storage_emplace_component(struct storage *storage, struct component_pool *pool, entity e);
