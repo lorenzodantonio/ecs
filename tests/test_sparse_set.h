@@ -1,5 +1,5 @@
-#ifndef TEST_DATASTRUCTURE_H
-#define TEST_DATASTRUCTURE_H
+#ifndef TEST_SPARSE_SET_H
+#define TEST_SPARSE_SET_H
 
 void sparse_set_new__succeeds(void);
 

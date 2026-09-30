@@ -1,5 +1,5 @@
-#ifndef DATASTRUCTURE_H
-#define DATASTRUCTURE_H
+#ifndef SPARSE_SET_H
+#define SPARSE_SET_H
 
 #include "entity.h"
 #include <assert.h>

@@ -4,11 +4,10 @@ project(ecs C)
 set(CMAKE_C_STANDARD 11)
 add_compile_options(-Wall -Wextra -O2 -pedantic)
 
-# lib sources (no GLOB)
 set(ECS_SOURCES
         src/component_pool.c
         src/component_registry.c
-        src/datastructure.c
+        src/sparse_set.c
         src/entity_registry.c
         src/storage.c
 )
@@ -20,20 +19,17 @@ target_include_directories(ecs
         PRIVATE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
 )
 
-# Coverage per la libreria ecs (e i suoi consumatori)
 target_compile_options(ecs PUBLIC --coverage)
 target_link_options(ecs PUBLIC --coverage)
 
-# Demo
 add_executable(ecs_demo demo.c)
 target_link_libraries(ecs_demo PRIVATE ecs)
 
-# Test Coverage
 enable_testing()
 
 set(TEST_FILES
         test_component_registry
-        test_datastructure
+        test_sparse_set
         test_entity_registry
         test_entity
         test_storage

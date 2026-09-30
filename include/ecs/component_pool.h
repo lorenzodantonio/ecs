@@ -1,7 +1,7 @@
 #ifndef COMPONENT_POOL_H
 #define COMPONENT_POOL_H
 
-#include "datastructure.h"
+#include "sparse_set.h"
 #include "entity.h"
 #include <stdlib.h>
 

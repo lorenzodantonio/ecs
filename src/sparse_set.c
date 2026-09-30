@@ -1,4 +1,4 @@
-#include "ecs/datastructure.h"
+#include "ecs/sparse_set.h"
 #include <stdlib.h>
 
 int sparse_set_init(struct sparse_set *set, uint32_t capacity) {

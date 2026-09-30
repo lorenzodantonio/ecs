@@ -1,4 +1,4 @@
-#include "ecs/datastructure.h"
+#include "ecs/sparse_set.h"
 #include <assert.h>
 #include <stdint.h>
 
