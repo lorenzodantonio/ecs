@@ -7,11 +7,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 WORKDIR /usr/src/ecs
 COPY . .
 
-# Out-of-source build
-# 1. Configurazione out-of-source
+# 1. Out-of-source build
 RUN cmake -B build -S .
-# 2. Compilazione effettiva di tutti i target (lib, demo, test)
+# 2. target build (lib, demo, test)
 RUN cmake --build build
-# 3. Esecuzione suite CTest (il build Docker fallisce se un test fallisce)
-
-CMD ["ctest", "--test-dir", "build", "--output-on-failure"]
+# 3. Run CTest (docker build fails if the test fails)
+RUN ["ctest", "--test-dir", "build", "--output-on-failure"]
