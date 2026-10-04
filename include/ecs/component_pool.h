@@ -12,7 +12,7 @@ struct component_pool {
   void *data;
 };
 
-void component_pool_init(struct component_pool *pool, size_t id,
+int component_pool_init(struct component_pool *pool, size_t id,
                          size_t component_size, size_t capacity);
 void component_pool_free(struct component_pool *pool);
 
@@ -38,13 +38,5 @@ static inline void *component_pool_get_by_entity(struct component_pool *pool,
 
 void *component_pool_emplace(struct component_pool *pool, entity e);
 int component_pool_remove(struct component_pool *pool, entity e);
-
-static inline int tag(struct component_pool *pool, entity e) {
-  return sparse_set_push(&pool->entities, e);
-}
-
-static inline int untag(struct component_pool *pool, entity e) {
-  return sparse_set_remove(&pool->entities, e);
-}
 
 #endif

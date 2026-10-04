@@ -1,17 +1,19 @@
 #include "ecs/component_pool.h"
 #include <assert.h>
 
-void component_pool_init(struct component_pool *pool, size_t id,
+int component_pool_init(struct component_pool *pool, size_t id,
                          size_t component_size, size_t capacity) {
   pool->id = id;
   pool->component_size = component_size;
-  if (component_size) {
-    pool->data = malloc(component_size * capacity);
-  } else {
-    pool->data = NULL;
+  if (component_size == 0) {
+    return -1;
   }
 
-  sparse_set_init(&pool->entities, capacity);
+  pool->data = malloc(component_size * capacity);
+  if (pool->data == NULL) {
+    return -1;
+  }
+  return sparse_set_init(&pool->entities, capacity);
 }
 
 void *component_pool_emplace(struct component_pool *pool, entity e) {
