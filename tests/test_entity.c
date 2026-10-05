@@ -1,5 +1,3 @@
-#include "test_entity.h"
-
 #include "ecs/entity_registry.h"
 #include <assert.h>
 

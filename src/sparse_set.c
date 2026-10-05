@@ -24,18 +24,6 @@ int sparse_set_init(struct sparse_set *set, uint32_t capacity) {
   return 0;
 }
 
-struct sparse_set *sparse_set_new(uint32_t capacity) {
-  struct sparse_set *set = malloc(sizeof(*set));
-  if (!set) {
-    return NULL;
-  }
-
-  if (sparse_set_init(set, capacity) == -1) {
-    return NULL;
-  }
-  return set;
-}
-
 int sparse_set_push(struct sparse_set *set, entity e) {
   if (set->count >= set->capacity) {
     sparse_set_dense_realloc_nocheck(set);

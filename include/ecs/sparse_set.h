@@ -19,7 +19,7 @@ struct sparse_set {
 };
 
 int sparse_set_init(struct sparse_set *set, uint32_t capacity);
-struct sparse_set *sparse_set_new(uint32_t capacity);
+
 int sparse_set_push(struct sparse_set *set, entity e);
 int sparse_set_remove(struct sparse_set *set, entity e);
 void sparse_set_deinit(struct sparse_set *set);

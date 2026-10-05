@@ -1,4 +1,3 @@
-#include "test_component_registry.h"
 #include "ecs/component_registry.h"
 #include <assert.h>
 
@@ -11,8 +10,9 @@ void component_registry_new__succeeds(void) {
 void component_registry_add__succeeds(void) {
   struct component_registry registry;
   component_registry_init(&registry);
-  size_t component_size = sizeof(struct x { int y; });
-  size_t max_entities = 16;
+  
+  const size_t component_size = sizeof(struct x { int y; });
+  const size_t max_entities = 16;
   struct component_pool *pool =
       component_registry_add(&registry, component_size, max_entities);
 

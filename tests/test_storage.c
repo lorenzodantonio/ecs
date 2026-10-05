@@ -1,4 +1,3 @@
-#include "test_storage.h"
 #include "ecs/storage.h"
 #include <assert.h>
 

@@ -34,7 +34,7 @@ void entity_registry_delete__fails_if_entity_already_deleted(void) {
 void entity_registry_next__succeeds(void) {
   struct entity_registry r;
   entity_registry_init(&r);
-  size_t id = entity_registry_next(&r);
+  const size_t id = entity_registry_next(&r);
   assert(id == 0);
 }
 
@@ -51,7 +51,7 @@ void entity_registry_next__reuse_last_index_deleted(void) {
 void entity_registry_exists__succeeds(void) {
   struct entity_registry r;
   entity_registry_init(&r);
-  size_t id = entity_registry_next(&r);
+  const size_t id = entity_registry_next(&r);
   assert(entity_registry_exists(&r, id) == 1);
 }
 

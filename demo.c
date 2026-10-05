@@ -1,4 +1,4 @@
-#include "include/ecs/storage.h"
+#include "ecs/storage.h"
 #include <stdlib.h>
 
 typedef struct {
