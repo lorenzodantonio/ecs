@@ -50,6 +50,8 @@ static inline int sparse_set_dense_realloc_nocheck(struct sparse_set *set) {
 
   set->dense = resized;
   set->capacity = new_cap;
+
+  return 0;
 }
 
 static inline void sparse_set_map_nocheck(struct sparse_set *set, entity e, uint32_t position) {
