@@ -41,11 +41,14 @@ static inline uint32_t *sparse_set_allocate_page_nocheck(struct sparse_set *set,
   return set->pages[page_num];
 }
 
-static inline void sparse_set_dense_realloc_nocheck(struct sparse_set *set) {
+static inline int sparse_set_dense_realloc_nocheck(struct sparse_set *set) {
   const uint32_t new_cap = set->capacity * 2;
-  entity *new_dense = realloc(set->dense, sizeof(entity) * new_cap);
-  assert(new_dense);
-  set->dense = new_dense;
+  entity *resized = realloc(set->dense, sizeof(entity) * new_cap);
+  if (resized == NULL) {
+    return -1;
+  }
+
+  set->dense = resized;
   set->capacity = new_cap;
 }
 
@@ -57,6 +60,12 @@ static inline void sparse_set_map_nocheck(struct sparse_set *set, entity e, uint
 
 static inline void sparse_set_push_nocheck(struct sparse_set *set, uint32_t entity) {
   sparse_set_map_nocheck(set, entity, set->count++);
+}
+
+static inline uint32_t sparse_set_find(struct sparse_set *s, entity e) {
+  const uint32_t idx = entity_get_index(e);
+  const uint32_t *page = s->pages[sparse_set_get_page(idx)];
+  return page ? page[sparse_set_get_offset(idx)] : UINT32_MAX;
 }
 
 #endif

@@ -53,18 +53,18 @@ void reset_position(struct component_pool *positions) {
 ...
 ```
 
-## Iterator/View: Iterate through multiple pools
-An iterator can be instantiated in order to scan multiple component pools looking for entity data.
+## Join: Iterate through multiple pools
+An join-iterator can be instantiated in order to scan multiple component pools looking for entity data.
 ```c
 ...
 void move(struct component_pool *positions, struct component_pool *velocities,
           float dt) {
-  struct iterator iter;
-  iterator_init(&iter, 2, (struct component_pool *[]){positions, velocities});
+  struct join j;
+  join_init(&j, 2, (struct component_pool *[]){positions, velocities});
 
-  while (iterator_next(&iter)) {
-    Position *pos = iterator_get_field(&iter, positions);
-    Velocity *vel = iterator_get_field(&iter, velocities);
+  while (join_next(&j)) {
+    Position *pos = join_get_field(&iter, positions);
+    Velocity *vel = join_get_field(&iter, velocities);
 
     pos->x += vel->vx * dt;
     pos->y += vel->vy * dt;

@@ -70,7 +70,7 @@ int component_pool_remove(struct component_pool *pool, entity e) {
   return 0;
 }
 
-void component_pool_free(struct component_pool *pool) {
+void component_pool_deinit(struct component_pool *pool) {
   sparse_set_deinit(&pool->entities);
   free(pool->data);
 }

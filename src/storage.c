@@ -23,6 +23,6 @@ void *storage_emplace_component(struct storage *storage, struct component_pool *
 }
 
 void storage_free(struct storage *s) {
-  component_registry_free(&s->components);
+  component_registry_deinit(&s->components);
   free(s);
 }

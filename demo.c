@@ -25,12 +25,12 @@ void reset_position(struct component_pool *positions) {
 
 void move(struct component_pool *positions, struct component_pool *velocities,
           float dt) {
-  struct iterator iter;
-  iterator_init(&iter, 2, (struct component_pool *[]){positions, velocities});
+  struct join j;
+  join_init(&j, 2, (struct component_pool *[]){positions, velocities});
 
-  while (iterator_next(&iter)) {
-    Position *pos = iterator_get_field(&iter, positions);
-    Velocity *vel = iterator_get_field(&iter, velocities);
+  while (join_next(&j)) {
+    Position *pos = join_get_field(&j, positions);
+    Velocity *vel = join_get_field(&j, velocities);
 
     pos->x += vel->vx * dt;
     pos->y += vel->vy * dt;

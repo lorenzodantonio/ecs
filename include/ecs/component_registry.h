@@ -12,7 +12,7 @@ struct component_registry {
 };
 
 void component_registry_init(struct component_registry *registry);
-void component_registry_free(struct component_registry *registry);
+void component_registry_deinit(struct component_registry *registry);
 
 struct component_pool *
 component_registry_add(struct component_registry *registry,
@@ -21,7 +21,7 @@ component_registry_add(struct component_registry *registry,
 int component_registry_purge_entity(struct component_registry *registry,
                                     entity e);
 
-struct iterator {
+struct join {
   size_t cursor;
   entity entity;
   size_t component_count;
@@ -30,13 +30,13 @@ struct iterator {
   void *data[MAX_COMPONENTS];
 };
 
-void iterator_init(struct iterator *iter, size_t component_count,
+void join_init(struct join *iter, size_t component_count,
                    struct component_pool **pools);
-int iterator_next(struct iterator *iter);
 
-static inline void *iterator_get_field(struct iterator *iter,
-                                       struct component_pool *pool) {
-  return iter->data[pool->id];
+int join_next(struct join *j);
+
+static inline void *join_get_field(struct join *j, struct component_pool *pool) {
+  return j->data[pool->id];
 }
 
 #endif
