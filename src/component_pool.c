@@ -1,5 +1,5 @@
 #include "ecs/component_pool.h"
-#include <assert.h>
+
 
 int component_pool_init(struct component_pool *pool, size_t id,
                          size_t component_size, size_t capacity) {
@@ -13,23 +13,35 @@ int component_pool_init(struct component_pool *pool, size_t id,
   if (pool->data == NULL) {
     return -1;
   }
-  return sparse_set_init(&pool->entities, capacity);
+
+  if (sparse_set_init(&pool->entities, capacity) == -1) {
+    free(pool->data);
+    return -1;
+  }
+
+  return 0;
 }
 
 void *component_pool_emplace(struct component_pool *pool, entity e) {
   if (pool->entities.count >= pool->entities.capacity) {
-    sparse_set_dense_realloc_nocheck(&pool->entities);
+    void *resized =
+        realloc(pool->data, pool->component_size * (pool->entities.capacity * 2));
 
-    void *new_data =
-        realloc(pool->data, pool->component_size * pool->entities.capacity);
-    assert(new_data);
-    pool->data = new_data;
+    if (resized == NULL) {
+      return NULL;
+    }
+    pool->data = resized;
+
+    if (sparse_set_dense_realloc_nocheck(&pool->entities)) {
+      return NULL;
+    }
   }
-
   const uint32_t page_num = sparse_set_get_page(entity_get_index(e));
 
   if (pool->entities.pages[page_num] == NULL) {
-    sparse_set_allocate_page_nocheck(&pool->entities, page_num);
+    if (sparse_set_allocate_page_nocheck(&pool->entities, page_num) == NULL) {
+      return NULL;
+    }
   }
   sparse_set_push_nocheck(&pool->entities, e);
 

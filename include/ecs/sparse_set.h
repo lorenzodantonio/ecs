@@ -2,7 +2,6 @@
 #define SPARSE_SET_H
 
 #include "entity.h"
-#include <assert.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -20,10 +19,9 @@ struct sparse_set {
 
 int sparse_set_init(struct sparse_set *set, uint32_t capacity);
 
-int sparse_set_push(struct sparse_set *set, entity e);
-int sparse_set_remove(struct sparse_set *set, entity e);
+// int sparse_set_push(struct sparse_set *set, entity e);
+// int sparse_set_remove(struct sparse_set *set, entity e);
 void sparse_set_deinit(struct sparse_set *set);
-void sparse_set_free(struct sparse_set *set);
 
 static inline uint32_t sparse_set_get_page(uint32_t index) {
   return index >> PAGE_SHIFT;
@@ -33,10 +31,20 @@ static inline uint32_t sparse_set_get_offset(uint32_t index) {
   return index & (PAGE_MASK);
 }
 
+static inline uint32_t sparse_set_find(struct sparse_set *s, entity e) {
+  const uint32_t idx = entity_get_index(e);
+  const uint32_t *page = s->pages[sparse_set_get_page(idx)];
+  return page ? page[sparse_set_get_offset(idx)] : UINT32_MAX;
+}
+
+/* internals */
+
 static inline uint32_t *sparse_set_allocate_page_nocheck(struct sparse_set *set,
                                                          uint32_t page_num) {
   set->pages[page_num] = malloc(sizeof(uint32_t) * PAGE_SIZE);
-  assert(set->pages[page_num]);
+  if (set->pages[page_num] == NULL) {
+    return NULL;
+  }
   memset(set->pages[page_num], UINT32_MAX, PAGE_SIZE * sizeof(uint32_t));
   return set->pages[page_num];
 }
@@ -60,14 +68,8 @@ static inline void sparse_set_map_nocheck(struct sparse_set *set, entity e, uint
   set->dense[position] = e;
 }
 
-static inline void sparse_set_push_nocheck(struct sparse_set *set, uint32_t entity) {
-  sparse_set_map_nocheck(set, entity, set->count++);
-}
-
-static inline uint32_t sparse_set_find(struct sparse_set *s, entity e) {
-  const uint32_t idx = entity_get_index(e);
-  const uint32_t *page = s->pages[sparse_set_get_page(idx)];
-  return page ? page[sparse_set_get_offset(idx)] : UINT32_MAX;
+static inline void sparse_set_push_nocheck(struct sparse_set *set, entity e) {
+  sparse_set_map_nocheck(set, e, set->count++);
 }
 
 #endif

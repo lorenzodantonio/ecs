@@ -5,15 +5,16 @@
 
 typedef uint32_t entity;
 
-#define ENTITY_INDEX_BITS 20
-
-#define ENTITY_PACK(index, version)                                            \
-  ((entity)((((version) & ENTITY_VER_MASK) << ENTITY_INDEX_BITS) | ((index) & 0xFFFFF)))
-
 enum {
   ENTITY_IDX_MASK = 0xFFFFF,
   ENTITY_VER_MASK = 0xFFF,
 };
+
+#define ENTITY_INDEX_BITS 20
+
+#define ENTITY_PACK(index, version)                                        \
+  ((entity)((((uint32_t)(version) & ENTITY_VER_MASK) << ENTITY_INDEX_BITS) | \
+  ((uint32_t)(index) & ENTITY_IDX_MASK)))
 
 #define INVALID_ENTITY ENTITY_PACK(ENTITY_IDX_MASK, 0xFFF)
 
