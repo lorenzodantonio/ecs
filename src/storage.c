@@ -6,7 +6,10 @@ struct storage *storage_new(void) {
     return NULL;
   }
 
-  entity_registry_init(&storage->entities);
+  if (entity_registry_init(&storage->entities, ENTITY_IDX_MASK) == -1) {
+    free(storage);
+    return NULL;
+  }
   component_registry_init(&storage->components);
 
   return storage;
@@ -23,6 +26,7 @@ void *storage_emplace_component(struct storage *storage, struct component_pool *
 }
 
 void storage_free(struct storage *s) {
+  entity_registry_deinit(&s->entities);
   component_registry_deinit(&s->components);
   free(s);
 }
