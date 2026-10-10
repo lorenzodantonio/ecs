@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.14)
 project(ecs C)
 
 set(CMAKE_C_STANDARD 99)
@@ -25,8 +25,24 @@ target_include_directories(ecs
 target_compile_options(ecs PUBLIC --coverage)
 target_link_options(ecs PUBLIC --coverage)
 
+find_package(raylib QUIET)
+if (NOT raylib_FOUND)
+    include(FetchContent)
+    set(BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+    FetchContent_Declare(
+            raylib
+            GIT_REPOSITORY https://github.com/raysan5/raylib.git
+            GIT_TAG 5.5
+            GIT_SHALLOW TRUE
+    )
+    FetchContent_MakeAvailable(raylib)
+endif()
+
 add_executable(ecs_demo demo.c)
-target_link_libraries(ecs_demo PRIVATE ecs)
+target_link_libraries(ecs_demo PRIVATE ecs raylib)
+if (UNIX AND NOT APPLE)
+    target_link_libraries(ecs_demo PRIVATE m)
+endif()
 
 enable_testing()
 
