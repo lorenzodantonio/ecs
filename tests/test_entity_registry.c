@@ -61,6 +61,14 @@ void entity_registry_exists__fails(void) {
   assert(entity_registry_exists(&r, 100) == 0);
 }
 
+void entity_registry_next__stops_before_overflow(void) {
+  struct entity_registry r;
+  entity_registry_init(&r);
+  r.cursor = ENTITY_IDX_MASK;
+  entity res = entity_registry_next(&r);
+  assert(res == INVALID_ENTITY);
+}
+
 int main(void) {
   entity_registry_new__succeeds();
 
@@ -73,5 +81,8 @@ int main(void) {
 
   entity_registry_exists__succeeds();
   entity_registry_exists__fails();
+
+  entity_registry_next__stops_before_overflow();
+
   return 0;
 }

@@ -22,6 +22,9 @@ entity entity_registry_next(struct entity_registry *r) {
     ver = entity_get_version(r->head) + 1;
     r->head = r->entries[idx];
   } else {
+    if (r->cursor >= ENTITY_IDX_MASK) {
+      return INVALID_ENTITY;
+    }
     idx = r->cursor++;
     ver = 0;
   }
