@@ -8,8 +8,8 @@ void component_registry_init(struct component_registry *r) {
 void component_registry_deinit(struct component_registry *r) {
   for (size_t i = 0; i < r->count; i++) {
     component_pool_deinit(&r->pools[i]);
-    r->count = 0;
   }
+  r->count = 0;
 }
 
 struct component_pool *
