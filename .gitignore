@@ -12,5 +12,6 @@ cmake_install.cmake
 compile_commands.json
 
 .idea/
-cmake-build-*/
 build/
+build-*/
+cmake-build-*/

@@ -11,14 +11,14 @@ struct component_registry {
   struct component_pool pools[MAX_COMPONENTS];
 };
 
-void component_registry_init(struct component_registry *registry);
-void component_registry_deinit(struct component_registry *registry);
+void component_registry_init(struct component_registry *r);
+void component_registry_deinit(struct component_registry *r);
 
 struct component_pool *
-component_registry_add(struct component_registry *registry,
+component_registry_add(struct component_registry *r,
                        size_t component_size, size_t capacity);
 
-int component_registry_purge_entity(struct component_registry *registry,
+int component_registry_purge_entity(struct component_registry *r,
                                     entity e);
 
 struct join {

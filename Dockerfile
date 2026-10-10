@@ -1,15 +1,18 @@
-FROM gcc:latest AS core_builder
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    cmake \
-    lcov \
+FROM gcc:14 AS test
+
+RUN apt-get update && apt-get install -y --no-install-recommends cmake \
  && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /usr/src/ecs
 COPY . .
 
-# 1. Out-of-source build
-RUN cmake -B build -S .
-# 2. target build (lib, demo, test)
+RUN cmake -B build -S . -DECS_SANITIZE=ON -DECS_WERROR=ON
 RUN cmake --build build
-# 3. Run CTest (docker build fails if the test fails)
 RUN ["ctest", "--test-dir", "build", "--output-on-failure"]
+
+FROM test AS coverage
+
+RUN apt-get update && apt-get install -y --no-install-recommends gcovr \
+ && rm -rf /var/lib/apt/lists/*
+RUN cmake -B build-coverage -S . -DECS_COVERAGE=ON
+RUN cmake --build build-coverage --target coverage

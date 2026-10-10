@@ -1,16 +1,18 @@
 name: C CI
 
-on: [push, pull_request]
+on:
+  push:
+    branches: [main]
+  pull_request:
 
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Install dependencies
-      run: sudo apt-get update && sudo apt-get install -y build-essential
+      - name: Test
+        run: docker build --progress=plain --target test -t ecs-test .
 
-    - name: Build and Run Tests in Docker
-      run: docker build -t ecs-test .
+      - name: Coverage
+        run: docker build --progress=plain -t ecs-coverage .
