@@ -27,5 +27,5 @@ int main(void) {
   component_registry_new__succeeds();
   component_registry_add__succeeds();
 
-  return 0; // 0 = PASSED per CTest
+  return 0;
 }

@@ -53,6 +53,7 @@ endif()
 if(ECS_BUILD_TESTS)
     enable_testing()
     foreach(TEST_NAME
+            test_component_pool
             test_component_registry
             test_entity_registry
             test_entity
@@ -67,6 +68,6 @@ if(ECS_BUILD_TESTS)
                 COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure
                 COMMAND gcovr -r ${CMAKE_SOURCE_DIR} --filter ${CMAKE_SOURCE_DIR}/src
                 WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
-        add_dependencies(coverage test_component_registry test_entity_registry test_entity test_storage)
+        add_dependencies(coverage test_component_pool test_component_registry test_entity_registry test_entity test_storage)
     endif()
 endif()

@@ -8,11 +8,14 @@ void entity_registry_init__succeeds(void) {
   entity_registry_deinit(&r);
 }
 
-void entity_registry_init_fails_on_exceeding_capacity(void) {
+void entity_registry_init__fails_when_capacity_is_zero(void) {
   struct entity_registry r;
-  int res = entity_registry_init(&r, ENTITY_IDX_MASK + 1);
-  assert(res == -1);
-  entity_registry_deinit(&r);
+  assert(entity_registry_init(&r, 0) == -1);
+}
+
+void entity_registry_init__fails_when_capacity_exceeds(void) {
+  struct entity_registry r;
+  assert(entity_registry_init(&r, ENTITY_IDX_MASK + 1) == -1);
 }
 
 void entity_registry_delete__succeeds(void) {
@@ -28,8 +31,7 @@ void entity_registry_delete__fails_if_entity_does_not_exist(void) {
   struct entity_registry r;
   entity_registry_init(&r, 4);
   entity e = entity_new(10, 0);
-  int res = entity_registry_delete(&r, e);
-  assert(res == -1);
+  assert(entity_registry_delete(&r, e) == -1);
   entity_registry_deinit(&r);
 }
 
@@ -45,12 +47,12 @@ void entity_registry_delete__fails_if_entity_already_deleted(void) {
 void entity_registry_next__succeeds(void) {
   struct entity_registry r;
   entity_registry_init(&r, 4);
-  const size_t id = entity_registry_next(&r);
-  assert(id == 0);
+  entity e = entity_registry_next(&r);
+  assert(e == entity_new(0, 0));
   entity_registry_deinit(&r);
 }
 
-void entity_registry_next__reuse_last_index_deleted(void) {
+void entity_registry_next__recycle_last_deletion(void) {
   struct entity_registry r;
   entity_registry_init(&r, 4);
   entity old = entity_registry_next(&r);
@@ -94,19 +96,19 @@ void entity_registry_next__stops_before_overflow(void) {
 
 int main(void) {
   entity_registry_init__succeeds();
-  entity_registry_init_fails_on_exceeding_capacity();
+  entity_registry_init__fails_when_capacity_is_zero();
+  entity_registry_init__fails_when_capacity_exceeds();
 
   entity_registry_delete__succeeds();
   entity_registry_delete__fails_if_entity_does_not_exist();
   entity_registry_delete__fails_if_entity_already_deleted();
 
   entity_registry_next__succeeds();
-  entity_registry_next__reuse_last_index_deleted();
+  entity_registry_next__recycle_last_deletion();
+  entity_registry_next__stops_before_overflow();
 
   entity_registry_exists__succeeds();
   entity_registry_exists__fails();
-
-  entity_registry_next__stops_before_overflow();
 
   return 0;
 }
