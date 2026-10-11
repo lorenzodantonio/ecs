@@ -33,7 +33,38 @@ struct join {
 void join_init(struct join *iter, size_t component_count,
                    struct component_pool **pools);
 
-int join_next(struct join *j);
+
+static inline int join_next(struct join *j) {
+  size_t cursor = 0;
+  entity e = INVALID_ENTITY;
+
+  int match = 0;
+  while (!match && j->cursor) {
+    cursor = --j->cursor;
+    e = j->leader->entities.dense[cursor];
+
+    int inner_match = 1;
+    size_t k = 0;
+    while (inner_match && k < j->component_count - 1) {
+      struct component_pool *f = j->followers[k++];
+      const uint32_t pos = sparse_set_find(&f->entities, e);
+      inner_match = pos != UINT32_MAX;
+      if (inner_match) {
+        j->data[f->id] = component_pool_get_by_position(f, pos);
+      }
+    }
+    match = inner_match;
+  }
+
+  if (!match) {
+    return 0;
+  }
+
+  j->entity = e;
+  j->data[j->leader->id] = component_pool_get_by_position(j->leader, cursor);
+
+  return match;
+}
 
 static inline void *join_get_field(struct join *j, struct component_pool *pool) {
   return j->data[pool->id];
