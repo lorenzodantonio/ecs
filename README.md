@@ -11,7 +11,7 @@ When an entity is deleted its index is listed for reuse, but upon recycling the 
 ```c
 entity foo = storage_create_entity(storage); // index: 0 version: 0
 storage_create_entity(storage); // index: 1 version: 0
-storage_delete_entity(storage,  foo);
+storage_destroy_entity(storage,  foo);
 storage_create_entity(storage); // index: 0 version: 1
 storage_create_entity(storage); // index: 2 version: 0
 ```
@@ -54,7 +54,7 @@ void reset_position(struct component_pool *positions) {
 ```
 
 ## Join: Iterate through multiple pools
-An join-iterator can be instantiated in order to scan multiple component pools looking for entity data.
+A join-iterator can be instantiated in order to scan multiple component pools looking for entity data.
 ```c
 ...
 void move(struct component_pool *positions, struct component_pool *velocities,
@@ -63,8 +63,8 @@ void move(struct component_pool *positions, struct component_pool *velocities,
   join_init(&j, 2, (struct component_pool *[]){positions, velocities});
 
   while (join_next(&j)) {
-    Position *pos = join_get_field(&j, positions);
-    Velocity *vel = join_get_field(&j, velocities);
+    Position *pos = join_get_component(&j, positions);
+    Velocity *vel = join_get_component(&j, velocities);
 
     pos->x += vel->vx * dt;
     pos->y += vel->vy * dt;

@@ -8,19 +8,19 @@ void component_registry_new__succeeds(void) {
 }
 
 void component_registry_add__succeeds(void) {
-  struct component_registry registry;
-  component_registry_init(&registry);
+  struct component_registry r;
+  component_registry_init(&r);
   
   const size_t component_size = sizeof(struct x { int y; });
   const size_t max_entities = 16;
   struct component_pool *pool =
-      component_registry_add(&registry, component_size, max_entities);
+      component_registry_add(&r, component_size, max_entities);
 
   assert(pool->id == 0);
   assert(pool->component_size == component_size);
   assert(pool->entities.capacity == max_entities);
 
-  component_registry_deinit(&registry);
+  component_registry_deinit(&r);
 }
 
 int main(void) {

@@ -52,12 +52,13 @@ endif()
 
 if(ECS_BUILD_TESTS)
     enable_testing()
-    foreach(TEST_NAME
+    set(ECS_TESTS
             test_component_pool
             test_component_registry
             test_entity_registry
             test_entity
             test_storage)
+    foreach(TEST_NAME ${ECS_TESTS})
         add_executable(${TEST_NAME} tests/${TEST_NAME}.c)
         target_link_libraries(${TEST_NAME} PRIVATE ecs)
         add_test(NAME ${TEST_NAME} COMMAND ${TEST_NAME})
@@ -66,8 +67,8 @@ if(ECS_BUILD_TESTS)
     if(ECS_COVERAGE)
         add_custom_target(coverage
                 COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure
-                COMMAND gcovr -r ${CMAKE_SOURCE_DIR} --filter ${CMAKE_SOURCE_DIR}/src
+                COMMAND gcovr -r ${CMAKE_SOURCE_DIR} --filter ${CMAKE_SOURCE_DIR}/src ${CMAKE_BINARY_DIR}
                 WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
-        add_dependencies(coverage test_component_pool test_component_registry test_entity_registry test_entity test_storage)
+        add_dependencies(coverage ${ECS_TESTS})
     endif()
 endif()

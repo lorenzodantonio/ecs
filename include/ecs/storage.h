@@ -3,6 +3,7 @@
 
 #include "component_registry.h"
 #include "entity_registry.h"
+#include <stdbool.h>
 
 #define INITIAL_ENTITIES 1024
 
@@ -20,12 +21,12 @@ storage_register_component(struct storage *storage, size_t size) {
 }
 
 static inline entity storage_create_entity(struct storage *storage) {
-  return entity_registry_next(&storage->entities);
+  return entity_registry_issue(&storage->entities);
 }
 
-static inline int storage_delete_entity(struct storage *storage,
+static inline int storage_destroy_entity(struct storage *storage,
                                          entity e) {
-  const int res = entity_registry_delete(&storage->entities, e);
+  const int res = entity_registry_revoke(&storage->entities, e);
   if (res == -1) {
     return -1;
   }
@@ -34,6 +35,12 @@ static inline int storage_delete_entity(struct storage *storage,
   return 0;
 }
 
-void *storage_emplace_component(struct storage *storage, struct component_pool *pool, entity e);
+static inline bool storage_exists(struct storage *s, entity e) {
+  return entity_registry_exists(&s->entities, e);
+}
+
+void *storage_add_component(struct storage *s, struct component_pool *pool, entity e);
+void *storage_set_component(struct storage *s, struct component_pool *pool, entity e, const void *value);
+int storage_unset_component(struct storage *s, struct component_pool *pool, entity e);
 
 #endif
