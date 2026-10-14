@@ -21,6 +21,10 @@ static inline void *component_pool_get_by_position(struct component_pool *pool,
   return (char *)pool->data + position * pool->component_size;
 }
 
+static inline uint32_t component_pool_find(struct component_pool *pool, entity e) {
+  return sparse_set_find(&pool->entities, e);
+}
+
 static inline void *component_pool_get_by_entity(struct component_pool *pool,
                                                  entity e) {
   const uint32_t pos = sparse_set_find(&pool->entities, e);
