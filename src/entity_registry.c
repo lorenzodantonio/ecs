@@ -1,7 +1,7 @@
 #include "ecs/entity_registry.h"
 #include <stdlib.h>
 
-int entity_registry_exists(const struct entity_registry *r, entity e) {
+bool entity_registry_exists(const struct entity_registry *r, entity e) {
   const uint32_t idx = entity_get_index(e);
   return idx < r->cursor && r->slots[idx] == e;
 }
@@ -33,7 +33,7 @@ void entity_registry_deinit(struct entity_registry *r) {
   r->slots = NULL;
 }
 
-entity entity_registry_next(struct entity_registry *r) {
+entity entity_registry_issue(struct entity_registry *r) {
   uint32_t idx, ver;
 
   if (r->head != INVALID_ENTITY) {
@@ -50,19 +50,17 @@ entity entity_registry_next(struct entity_registry *r) {
 
   const entity e = entity_new(idx, ver);
   r->slots[idx] = e;
-
   r->count += 1;
 
   return e;
 }
 
-int entity_registry_delete(struct entity_registry *r, entity e) {
+int entity_registry_revoke(struct entity_registry *r, entity e) {
   if (!entity_registry_exists(r, e)) {
     return -1;
   }
 
-  const uint32_t idx = entity_get_index(e);
-  r->slots[idx] = r->head;
+  r->slots[entity_get_index(e)] = r->head;
   r->head = e;
 
   r->count--;

@@ -33,7 +33,6 @@ struct join {
 void join_init(struct join *iter, size_t component_count,
                    struct component_pool **pools);
 
-
 static inline int join_next(struct join *j) {
   size_t cursor = 0;
   entity e = INVALID_ENTITY;
@@ -66,7 +65,7 @@ static inline int join_next(struct join *j) {
   return match;
 }
 
-static inline void *join_get_field(struct join *j, struct component_pool *pool) {
+static inline void *join_get_component(struct join *j, struct component_pool *pool) {
   return j->data[pool->id];
 }
 

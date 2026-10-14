@@ -27,10 +27,9 @@ void move(struct component_pool *positions, struct component_pool *velocities,
           float dt) {
   struct join j;
   join_init(&j, 2, (struct component_pool *[]){positions, velocities});
-
   while (join_next(&j)) {
-    Position *pos = join_get_field(&j, positions);
-    Velocity *vel = join_get_field(&j, velocities);
+    Position *pos = join_get_component(&j, positions);
+    Velocity *vel = join_get_component(&j, velocities);
 
     pos->x += vel->vx * dt;
     pos->y += vel->vy * dt;
@@ -48,19 +47,19 @@ int main(void) {
   const entity id0 = storage_create_entity(storage);
   const entity id1 = storage_create_entity(storage);
 
-  Velocity *v0 = storage_emplace_component(storage, velocities, id0);
+  Velocity *v0 = storage_add_component(storage, velocities, id0);
   v0->vx = 8;
   v0->vy = 8;
 
-  Velocity *v1 = storage_emplace_component(storage, velocities, id1);
+  Velocity *v1 = storage_add_component(storage, velocities, id1);
   v1->vx = 4;
   v1->vy = 4;
 
-  Position *p0 = storage_emplace_component(storage, positions, id0);
+  Position *p0 = storage_add_component(storage, positions, id0);
   p0->x = 0;
   p0->y = 0;
 
-  Position *p1 = storage_emplace_component(storage, positions, id1);
+  Position *p1 = storage_add_component(storage, positions, id1);
   p1->x = 64;
   p1->y = 64;
 
