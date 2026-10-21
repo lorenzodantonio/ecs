@@ -9,7 +9,6 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
     set(CMAKE_BUILD_TYPE Debug CACHE STRING "Build type" FORCE)
 endif()
 
-option(ECS_BUILD_DEMO "Build the demo" ON)
 option(ECS_BUILD_TESTS "Build the tests" ON)
 option(ECS_SANITIZE "Build with AddressSanitizer and UndefinedBehaviorSanitizer" OFF)
 option(ECS_COVERAGE "Build with coverage instrumentation" OFF)
@@ -40,14 +39,6 @@ target_include_directories(ecs
 if(ECS_COVERAGE)
     target_compile_options(ecs PUBLIC --coverage -O0 -g)
     target_link_options(ecs PUBLIC --coverage)
-endif()
-
-if(ECS_BUILD_DEMO)
-    add_executable(ecs_demo demo.c)
-    target_link_libraries(ecs_demo PRIVATE ecs)
-    if(UNIX AND NOT APPLE)
-        target_link_libraries(ecs_demo PRIVATE m)
-    endif()
 endif()
 
 if(ECS_BUILD_TESTS)
