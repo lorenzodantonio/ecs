@@ -21,9 +21,11 @@ void entity_registry_init__fails_when_capacity_exceeds(void) {
 void entity_registry_revoke__succeeds(void) {
   struct entity_registry r;
   entity_registry_init(&r, 4);
+
   entity e = entity_registry_issue(&r);
   entity_registry_revoke(&r, e);
   assert(entity_registry_exists(&r, e) == 0);
+
   entity_registry_deinit(&r);
 }
 
@@ -41,6 +43,26 @@ void entity_registry_revoke__fails_if_entity_already_deleted(void) {
   entity e = entity_registry_issue(&r);
   assert(entity_registry_revoke(&r, e) == 0);
   assert(entity_registry_revoke(&r, e) == -1);
+  entity_registry_deinit(&r);
+}
+
+void entity_registry_revoke__retires_index_after_last_version(void) {
+  struct entity_registry r;
+  entity_registry_init(&r, 4);
+  entity e = entity_registry_issue(&r);
+  const uint32_t idx = entity_get_index(e);
+
+  for (uint32_t v = 0; v < ENTITY_VER_MASK; v++) {
+    assert(entity_registry_revoke(&r, e) == 0);
+    e = entity_registry_issue(&r);
+    assert(entity_get_index(e) == idx);
+  }
+  assert(entity_get_version(e) == ENTITY_VER_MASK);
+
+  assert(entity_registry_revoke(&r, e) == 0);
+  assert(entity_registry_exists(&r, e) == 0);
+  assert(entity_registry_exists(&r, entity_new(idx, 0)) == 0);
+  assert(entity_get_index(entity_registry_issue(&r)) != idx);
   entity_registry_deinit(&r);
 }
 
@@ -94,6 +116,7 @@ void entity_registry_issue__stops_before_overflow(void) {
   entity_registry_deinit(&r);
 }
 
+
 int main(void) {
   entity_registry_init__succeeds();
   entity_registry_init__fails_when_capacity_is_zero();
@@ -102,6 +125,7 @@ int main(void) {
   entity_registry_revoke__succeeds();
   entity_registry_revoke__fails_if_entity_does_not_exist();
   entity_registry_revoke__fails_if_entity_already_deleted();
+  entity_registry_revoke__retires_index_after_last_version();
 
   entity_registry_issue__succeeds();
   entity_registry_issue__recycle_last_deletion();
