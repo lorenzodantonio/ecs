@@ -63,6 +63,8 @@ void entity_registry_revoke__retires_index_after_last_version(void) {
   assert(entity_registry_exists(&r, e) == 0);
   assert(entity_registry_exists(&r, entity_new(idx, 0)) == 0);
   assert(entity_get_index(entity_registry_issue(&r)) != idx);
+
+  assert(r.count == 1);
   entity_registry_deinit(&r);
 }
 

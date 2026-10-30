@@ -62,11 +62,10 @@ int entity_registry_revoke(struct entity_registry *r, entity e) {
 
   if (entity_get_version(e) == ENTITY_VER_MASK) {
     r->slots[entity_get_index(e)] = INVALID_ENTITY;
-    return 0;
+  } else {
+    r->slots[entity_get_index(e)] = r->head;
+    r->head = e;
   }
-
-  r->slots[entity_get_index(e)] = r->head;
-  r->head = e;
 
   r->count--;
 
