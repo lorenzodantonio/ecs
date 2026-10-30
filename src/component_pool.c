@@ -1,4 +1,5 @@
 #include "ecs/component_pool.h"
+#include "sparse_set_internal.h"
 
 
 int component_pool_init(struct component_pool *pool, size_t id,

@@ -2,6 +2,7 @@
 #define STORAGE_H
 
 #include "component_registry.h"
+#include "join.h"
 #include "entity_registry.h"
 #include <stdbool.h>
 

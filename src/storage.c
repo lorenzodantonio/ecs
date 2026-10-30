@@ -1,5 +1,6 @@
 #include "ecs/storage.h"
 #include <stdlib.h>
+#include <string.h>
 
 struct storage *storage_new(void) {
   struct storage *s = malloc(sizeof *s);
